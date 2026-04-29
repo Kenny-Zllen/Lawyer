@@ -22,6 +22,7 @@ export interface ContractReviewResult {
   legalArea: LegalArea;
   overallRisk: RiskLevel;
   summary: string;
+  keyClauses: string[];
   keyIssues: Array<{
     title: string;
     riskLevel: RiskLevel;
@@ -53,4 +54,14 @@ export interface DraftingResult {
   draftText: string;
   checklist: string[];
   sources: AuthoritativeLegalSource[];
+}
+
+export interface UploadedContract {
+  contractId: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  rawText: string;
+  rawTextPreview: string;
+  createdAt: string;
 }

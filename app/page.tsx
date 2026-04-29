@@ -33,11 +33,11 @@ export default function DashboardPage() {
       <section className="mt-8 grid gap-5 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>第一阶段范围</CardTitle>
+            <CardTitle>第二阶段范围</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm leading-6 text-muted-foreground">
-            <p>当前版本只完成前端页面、类型定义、mock 法律知识库和基础交互。</p>
-            <p>不会调用真实 OpenAI API，不连接真实数据库，也不会解析真实上传文件。</p>
+            <p>当前版本已加入 API routes、TXT 合同上传、内存 mock store 和后端 mock AI workflow。</p>
+            <p>仍不会调用真实 OpenAI API，不连接真实数据库，也不会解析 TXT 以外的真实复杂文件。</p>
           </CardContent>
         </Card>
         <Card>
