@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import { getPrismaClient } from "@/lib/prisma";
-import type { DraftingRequest, LegalArea } from "@/types/legal";
+import type { DraftingRequest, LegalArea, LitigationRequest } from "@/types/legal";
 
 export async function saveLegalResearchResult({
   question,
@@ -56,4 +56,41 @@ export async function saveLegalDraftResult({
   } catch {
     return { databaseWarning: "数据库暂不可用，文书结果未写入数据库。" };
   }
+}
+
+export async function saveLitigationAnalysisResult({
+  request,
+  resultJson
+}: {
+  request: LitigationRequest;
+  resultJson: unknown;
+}) {
+  const prisma = getPrismaClient();
+  if (!prisma) {
+    return { databaseWarning: "DATABASE_URL 未配置，案件分析结果未写入数据库。" };
+  }
+
+  try {
+    await prisma.litigationAnalysis.create({
+      data: {
+        role: request.role,
+        caseType: request.caseType,
+        jurisdiction: "中国大陆",
+        inputJson: request as unknown as Prisma.InputJsonValue,
+        resultJson: resultJson as Prisma.InputJsonValue
+      }
+    });
+    return {};
+  } catch (error) {
+    console.warn("[litigation-analysis] save skipped", summarizeSaveError(error));
+    return { databaseWarning: "数据库暂不可用，案件分析结果未写入数据库。" };
+  }
+}
+
+function summarizeSaveError(error: unknown) {
+  if (error instanceof Error) {
+    return { name: error.name, message: error.message };
+  }
+
+  return { name: "UnknownError", message: String(error) };
 }

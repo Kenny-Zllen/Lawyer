@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { FileSearch, LayoutDashboard, PenLine, Search } from "lucide-react";
+import { Briefcase, FileSearch, LayoutDashboard, PenLine, Search } from "lucide-react";
 import { DisclaimerBanner } from "@/components/disclaimer-banner";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/contract-review", label: "合同审查", icon: FileSearch },
   { href: "/legal-research", label: "法律检索", icon: Search },
-  { href: "/legal-drafting", label: "文书生成", icon: PenLine }
+  { href: "/legal-drafting", label: "文书生成", icon: PenLine },
+  { href: "/litigation-assistant", label: "案件分析", icon: Briefcase }
 ];
 
 export function AppShell({
@@ -38,7 +39,7 @@ export function AppShell({
           ))}
         </nav>
         <div className="absolute bottom-6 left-4 right-4 rounded-md border border-border bg-muted p-3 text-xs leading-5 text-muted-foreground">
-          第一阶段 MVP：仅 mock 数据，不接真实 AI、数据库或文件解析。
+          当前 MVP：真实 AI 可选接入，数据库和 AI 不可用时保留 mock fallback。
         </div>
       </aside>
 

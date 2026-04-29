@@ -74,3 +74,68 @@ export interface UploadedContract {
   rawTextPreview: string;
   createdAt: string;
 }
+
+export type LitigationRole = "原告" | "被告" | "第三人";
+
+export type LitigationCaseType =
+  | "合同纠纷"
+  | "民间借贷纠纷"
+  | "劳动争议"
+  | "房屋租赁纠纷"
+  | "买卖合同纠纷"
+  | "侵权责任纠纷"
+  | "公司纠纷"
+  | "其他民商事纠纷";
+
+export type LitigationRequest = {
+  role: LitigationRole;
+  caseType: LitigationCaseType;
+  facts: string;
+  claimsOrDefense?: string;
+  existingEvidence?: string;
+  userQuestions: string;
+  jurisdiction: "中国大陆";
+};
+
+export type LitigationAnalysisResult = {
+  role: LitigationRole;
+  caseType: string;
+  jurisdiction: "中国大陆";
+  caseSummary: string;
+  keyIssues: {
+    issue: string;
+    explanation: string;
+    importance: "high" | "medium" | "low";
+  }[];
+  claimsOrDefenseSuggestions: string[];
+  legalBasis: {
+    title: string;
+    articleNumber?: string;
+    sourceName: string;
+    relevance: string;
+  }[];
+  evidenceAnalysis: {
+    existingEvidenceSummary: string[];
+    missingEvidence: {
+      evidenceName: string;
+      purpose: string;
+      priority: "high" | "medium" | "low";
+    }[];
+    evidenceStrategy: string[];
+  };
+  opposingArgumentsAndResponses: {
+    possibleOpposingArgument: string;
+    responseStrategy: string;
+    neededEvidence: string[];
+  }[];
+  draftDocuments: {
+    complaint?: string;
+    answer?: string;
+    representationStatement?: string;
+  };
+  riskWarnings: string[];
+  recommendedNextSteps: string[];
+  disclaimer: string;
+  isMockFallback?: boolean;
+  fallbackReason?: string;
+};

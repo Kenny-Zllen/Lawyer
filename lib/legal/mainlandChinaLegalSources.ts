@@ -49,9 +49,9 @@ export const mainlandChinaLegalSources: AuthoritativeLegalSource[] = [
     legalArea: "争议解决",
     jurisdiction: "中华人民共和国大陆",
     url: "https://flk.npc.gov.cn/",
-    keywords: ["诉讼", "管辖", "证据", "保全", "执行", "送达"],
-    summary: "规范民事案件管辖、审判程序、证据、保全、执行及涉外民事诉讼程序。",
-    relevantArticles: ["第二十四条", "第六十七条", "第一百零六条", "第一百二十二条", "第二百四十三条"]
+    keywords: ["诉讼", "民事诉讼", "起诉", "答辩", "管辖", "证据", "保全", "执行", "送达", "代理词"],
+    summary: "规则摘要：规范民事案件起诉条件、管辖、审判程序、证据、保全、执行及送达等基础程序规则。",
+    relevantArticles: ["起诉条件规则摘要", "证据规则摘要", "管辖规则摘要", "保全规则摘要", "执行规则摘要"]
   },
   {
     id: "arbitration-law",
@@ -65,6 +65,30 @@ export const mainlandChinaLegalSources: AuthoritativeLegalSource[] = [
     keywords: ["仲裁", "仲裁协议", "仲裁条款", "裁决", "争议解决"],
     summary: "规定仲裁协议、仲裁委员会、仲裁程序、裁决撤销和执行等基本规则。",
     relevantArticles: ["第十六条", "第十八条", "第二十一条", "第五十八条", "第六十二条"]
+  },
+  {
+    id: "private-lending-judicial-interpretation",
+    title: "最高人民法院关于审理民间借贷案件适用法律若干问题的规定",
+    authority: "司法解释",
+    issuingBody: "最高人民法院",
+    effectiveDate: "2021-01-01",
+    legalArea: "争议解决",
+    jurisdiction: "中华人民共和国大陆",
+    keywords: ["借贷", "民间借贷", "本金", "利息", "转账记录", "还款", "借款合同"],
+    summary: "规则摘要：就民间借贷合同效力、借贷事实证明、利率保护、还款责任等审理问题提供裁判规则框架。",
+    relevantArticles: ["借贷事实规则摘要", "利率保护规则摘要", "合同效力规则摘要"]
+  },
+  {
+    id: "civil-evidence-rules",
+    title: "最高人民法院关于民事诉讼证据的若干规定",
+    authority: "司法解释",
+    issuingBody: "最高人民法院",
+    effectiveDate: "2020-05-01",
+    legalArea: "争议解决",
+    jurisdiction: "中华人民共和国大陆",
+    keywords: ["证据", "举证", "质证", "聊天记录", "微信", "转账记录", "发票", "验收单", "对账单", "证明目的"],
+    summary: "规则摘要：规定民事诉讼举证、质证、证据交换、电子数据、证明责任及证据审查判断的基础规则。",
+    relevantArticles: ["举证责任规则摘要", "电子数据规则摘要", "证据审查规则摘要"]
   },
   {
     id: "personal-information-protection-law",

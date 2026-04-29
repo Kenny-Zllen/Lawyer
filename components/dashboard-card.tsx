@@ -7,12 +7,14 @@ export function DashboardCard({
   href,
   title,
   description,
-  icon: Icon
+  icon: Icon,
+  cta = "进入工作台"
 }: {
   href: string;
   title: string;
   description: string;
   icon: LucideIcon;
+  cta?: string;
 }) {
   return (
     <Link href={href} className="group block h-full">
@@ -26,7 +28,7 @@ export function DashboardCard({
         <CardContent>
           <p className="min-h-12 text-sm leading-6 text-muted-foreground">{description}</p>
           <div className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary">
-            进入工作台
+            {cta}
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" aria-hidden="true" />
           </div>
         </CardContent>

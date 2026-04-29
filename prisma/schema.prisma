@@ -16,6 +16,7 @@ model User {
   contracts       Contract[]
   researchQueries LegalResearchQuery[]
   drafts          LegalDraft[]
+  litigationAnalyses LitigationAnalysis[]
 }
 
 model Contract {
@@ -47,6 +48,19 @@ model LegalDraft {
   id           String   @id @default(cuid())
   userId       String?
   documentType String
+  jurisdiction String   @default("中国大陆")
+  inputJson    Json
+  resultJson   Json?
+  createdAt    DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model LitigationAnalysis {
+  id           String   @id @default(cuid())
+  userId       String?
+  role         String
+  caseType     String
   jurisdiction String   @default("中国大陆")
   inputJson    Json
   resultJson   Json?
