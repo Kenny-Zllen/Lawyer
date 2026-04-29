@@ -62,7 +62,9 @@ export function buildMockContractReviewResult(
       "保密与知识产权条款",
       "适用法律与争议解决条款"
     ],
-    sources: retrieveAuthoritativeLegalSources(rawText, 5)
+    sources: retrieveAuthoritativeLegalSources(rawText, 5),
+    aiMode: "mock",
+    warning: "当前未配置 OPENAI_API_KEY，返回 mock 示例结果。"
   };
 
   return ContractReviewResultSchema.parse(result);
@@ -90,7 +92,9 @@ export function buildMockLegalResearchResult(
             "核对合同是否已有交付标准、验收流程、通知与补救期限。",
             "整理履行事实、沟通记录、损失凭证和对方承诺。",
             "结合管辖或仲裁条款评估催告、谈判、诉讼或仲裁路径。"
-          ]
+          ],
+    aiMode: "mock",
+    warning: "当前未配置 OPENAI_API_KEY，返回 mock 示例结果。"
   };
 
   return LegalResearchResultSchema.parse(result);
@@ -113,7 +117,9 @@ export function buildMockDraftingResult(request: DraftingRequest): DraftingResul
       "检查适用法律、管辖或仲裁条款是否与交易安排匹配。",
       "由合资格律师结合事实和最新法规进行最终审阅。"
     ],
-    sources
+    sources,
+    aiMode: "mock",
+    warning: "当前未配置 OPENAI_API_KEY，返回 mock 示例结果。"
   };
 
   return DraftingResultSchema.parse(result);

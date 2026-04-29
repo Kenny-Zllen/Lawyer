@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+
+  contracts       Contract[]
+  researchQueries LegalResearchQuery[]
+  drafts          LegalDraft[]
+}
+
+model Contract {
+  id             String   @id @default(cuid())
+  userId         String?
+  fileName       String
+  fileType       String
+  rawText        String
+  reviewingParty String?
+  reviewJson     Json?
+  createdAt      DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model LegalResearchQuery {
+  id           String   @id @default(cuid())
+  userId       String?
+  question     String
+  legalArea    String?
+  jurisdiction String   @default("中国大陆")
+  resultJson   Json?
+  createdAt    DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model LegalDraft {
+  id           String   @id @default(cuid())
+  userId       String?
+  documentType String
+  jurisdiction String   @default("中国大陆")
+  inputJson    Json
+  resultJson   Json?
+  createdAt    DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}

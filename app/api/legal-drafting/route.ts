@@ -1,7 +1,16 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { generateJson } from "@/lib/ai/generateJson";
 import { buildMockDraftingResult } from "@/lib/ai/mockWorkflows";
+import { MissingOpenAIKeyError } from "@/lib/ai/openai";
+import { legalDraftingPrompt } from "@/lib/ai/prompts";
+import { DraftingResultSchema } from "@/lib/ai/schemas";
 import { documentTemplates } from "@/lib/legal/documentTemplates";
+import { retrieveAuthoritativeLegalSources } from "@/lib/legal/retrieveAuthoritativeLegalSources";
+import { saveLegalDraftResult } from "@/lib/legal/resultRepository";
+import { formatSourceContext } from "@/lib/legal/sourceContext";
+
+export const runtime = "nodejs";
 
 const DraftingRequestSchema = z.object({
   templateId: z.string().min(1),
@@ -19,8 +28,49 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "未找到对应文书模板。" }, { status: 404 });
     }
 
-    const result = buildMockDraftingResult(payload);
-    return NextResponse.json(result);
+    const template = documentTemplates.find((item) => item.id === payload.templateId);
+    const sources = retrieveAuthoritativeLegalSources(
+      `${template?.name ?? ""} ${payload.scenario} ${payload.keyTerms}`,
+      5
+    );
+
+    try {
+      const aiResult = await generateJson({
+        systemPrompt: legalDraftingPrompt,
+        userPrompt: JSON.stringify({
+          draftingRequest: payload,
+          documentTemplate: template,
+          jurisdiction: "中国大陆",
+          sourceContext: formatSourceContext(sources),
+          requiredOutputShape: "DraftingResultSchema"
+        }),
+        schema: DraftingResultSchema
+      });
+      const result = DraftingResultSchema.parse({
+        ...aiResult,
+        legalArea: template?.legalArea ?? aiResult.legalArea,
+        sources,
+        aiMode: "real"
+      });
+      const { databaseWarning } = await saveLegalDraftResult({
+        request: payload,
+        resultJson: result
+      });
+
+      return NextResponse.json({ ...result, databaseWarning });
+    } catch (error) {
+      if (!(error instanceof MissingOpenAIKeyError)) {
+        throw error;
+      }
+
+      const fallback = buildMockDraftingResult(payload);
+      const { databaseWarning } = await saveLegalDraftResult({
+        request: payload,
+        resultJson: fallback
+      });
+
+      return NextResponse.json({ ...fallback, sources, databaseWarning });
+    }
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "请补充完整的文书生成信息。" }, { status: 400 });

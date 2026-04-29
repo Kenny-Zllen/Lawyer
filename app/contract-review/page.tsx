@@ -12,6 +12,7 @@ import { ResultSection } from "@/components/result-section";
 import { RiskBadge } from "@/components/risk-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { ContractReviewResult } from "@/types/legal";
 
@@ -23,10 +24,12 @@ interface UploadedContractResponse {
   fileName: string;
   fileType: string;
   rawTextPreview: string;
+  databaseWarning?: string;
 }
 
 export default function ContractReviewPage() {
   const [contractText, setContractText] = useState(sampleContract);
+  const [reviewingParty, setReviewingParty] = useState("甲方");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadedContract, setUploadedContract] = useState<UploadedContractResponse | null>(null);
   const [result, setResult] = useState<ContractReviewResult | null>(null);
@@ -55,7 +58,7 @@ export default function ContractReviewPage() {
       const reviewResponse = await fetch("/api/contracts/review", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contractId: contract.contractId })
+        body: JSON.stringify({ contractId: contract.contractId, reviewingParty })
       });
       const reviewPayload = await reviewResponse.json();
 
@@ -116,10 +119,10 @@ export default function ContractReviewPage() {
               <PrivacyWarning />
               <label className="flex min-h-28 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-border bg-muted text-center text-sm text-muted-foreground transition hover:border-primary/60">
                 <Upload className="mb-2 h-5 w-5" aria-hidden="true" />
-                <span>上传 TXT 合同文件，最大 10MB</span>
+                <span>上传合同文件，支持 TXT / DOCX / PDF，最大 10MB</span>
                 <input
                   type="file"
-                  accept=".txt,text/plain"
+                  accept=".txt,.docx,.pdf,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   className="sr-only"
                   onChange={(event) => handleFileChange(event.target.files?.[0] ?? null)}
                 />
@@ -132,6 +135,15 @@ export default function ContractReviewPage() {
                   <span>{Math.ceil(selectedFile.size / 1024)} KB</span>
                 </div>
               )}
+              <label className="block text-sm font-medium">
+                审查视角
+                <Input
+                  className="mt-2"
+                  value={reviewingParty}
+                  onChange={(event) => setReviewingParty(event.target.value)}
+                  placeholder="例如：甲方、乙方、出租方、采购方"
+                />
+              </label>
               <Textarea
                 value={contractText}
                 onChange={(event) => setContractText(event.target.value)}
@@ -153,13 +165,30 @@ export default function ContractReviewPage() {
               <CardContent className="space-y-2 text-sm leading-6 text-muted-foreground">
                 <p>合同 ID：{uploadedContract.contractId}</p>
                 <p>文件名：{uploadedContract.fileName}</p>
+                <p>文件类型：{uploadedContract.fileType}</p>
                 <p>文本预览：{uploadedContract.rawTextPreview}</p>
+                {uploadedContract.databaseWarning && <p>{uploadedContract.databaseWarning}</p>}
               </CardContent>
             </Card>
           )}
           {result && (
             <ResultSection title="审查结论" action={<CopyButton text={copyText} />}>
               <div className="space-y-5">
+                {result.warning?.includes("OPENAI_API_KEY") && (
+                  <p className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-sm text-[#5c4618]">
+                    当前未配置 AI API Key，无法调用真实大模型。
+                  </p>
+                )}
+                {result.aiMode === "mock" && (
+                  <p className="rounded-md border border-border bg-muted p-3 text-sm text-muted-foreground">
+                    当前为 mock 示例结果，非真实 AI 分析。
+                  </p>
+                )}
+                {result.databaseWarning && (
+                  <p className="rounded-md border border-border bg-card p-3 text-sm text-muted-foreground">
+                    {result.databaseWarning}
+                  </p>
+                )}
                 <div className="flex flex-wrap items-center gap-3">
                   <RiskBadge level={result.overallRisk} />
                   <span className="text-sm text-muted-foreground">领域：{result.legalArea}</span>

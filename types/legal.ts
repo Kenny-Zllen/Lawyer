@@ -31,6 +31,9 @@ export interface ContractReviewResult {
   }>;
   suggestedClauses: string[];
   sources: AuthoritativeLegalSource[];
+  aiMode?: "real" | "mock";
+  warning?: string;
+  databaseWarning?: string;
 }
 
 export interface LegalResearchResult {
@@ -39,6 +42,9 @@ export interface LegalResearchResult {
   answer: string;
   sources: AuthoritativeLegalSource[];
   nextSteps: string[];
+  aiMode?: "real" | "mock";
+  warning?: string;
+  databaseWarning?: string;
 }
 
 export interface DraftingRequest {
@@ -54,6 +60,9 @@ export interface DraftingResult {
   draftText: string;
   checklist: string[];
   sources: AuthoritativeLegalSource[];
+  aiMode?: "real" | "mock";
+  warning?: string;
+  databaseWarning?: string;
 }
 
 export interface UploadedContract {

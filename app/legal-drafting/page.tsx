@@ -130,6 +130,21 @@ export default function LegalDraftingPage() {
           {result && (
             <ResultSection title={result.title} action={<CopyButton text={copyText} />}>
               <div className="space-y-4">
+                {result.warning?.includes("OPENAI_API_KEY") && (
+                  <p className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-sm text-[#5c4618]">
+                    当前未配置 AI API Key，无法调用真实大模型。
+                  </p>
+                )}
+                {result.aiMode === "mock" && (
+                  <p className="rounded-md border border-border bg-muted p-3 text-sm text-muted-foreground">
+                    当前为 mock 示例结果，非真实 AI 分析。
+                  </p>
+                )}
+                {result.databaseWarning && (
+                  <p className="rounded-md border border-border bg-card p-3 text-sm text-muted-foreground">
+                    {result.databaseWarning}
+                  </p>
+                )}
                 <pre className="whitespace-pre-wrap rounded-md border border-border bg-muted p-4 text-sm leading-7">
                   {result.draftText}
                 </pre>

@@ -99,6 +99,21 @@ export default function LegalResearchPage() {
           {result && (
             <ResultSection title="初步分析" action={<CopyButton text={copyText} />}>
               <div className="space-y-4 text-sm leading-6">
+                {result.warning?.includes("OPENAI_API_KEY") && (
+                  <p className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-[#5c4618]">
+                    当前未配置 AI API Key，无法调用真实大模型。
+                  </p>
+                )}
+                {result.aiMode === "mock" && (
+                  <p className="rounded-md border border-border bg-muted p-3 text-muted-foreground">
+                    当前为 mock 示例结果，非真实 AI 分析。
+                  </p>
+                )}
+                {result.databaseWarning && (
+                  <p className="rounded-md border border-border bg-card p-3 text-muted-foreground">
+                    {result.databaseWarning}
+                  </p>
+                )}
                 <p className="text-muted-foreground">识别领域：{result.legalArea}</p>
                 <p>{result.answer}</p>
                 <div>

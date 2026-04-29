@@ -33,7 +33,10 @@ export const ContractReviewResultSchema = z.object({
     })
   ),
   suggestedClauses: z.array(z.string()),
-  sources: z.array(AuthoritativeLegalSourceSchema)
+  sources: z.array(AuthoritativeLegalSourceSchema),
+  aiMode: z.enum(["real", "mock"]).optional(),
+  warning: z.string().optional(),
+  databaseWarning: z.string().optional()
 });
 
 export const LegalResearchResultSchema = z.object({
@@ -41,7 +44,10 @@ export const LegalResearchResultSchema = z.object({
   legalArea: LegalAreaSchema,
   answer: z.string(),
   sources: z.array(AuthoritativeLegalSourceSchema),
-  nextSteps: z.array(z.string())
+  nextSteps: z.array(z.string()),
+  aiMode: z.enum(["real", "mock"]).optional(),
+  warning: z.string().optional(),
+  databaseWarning: z.string().optional()
 });
 
 export const DraftingResultSchema = z.object({
@@ -49,5 +55,8 @@ export const DraftingResultSchema = z.object({
   legalArea: LegalAreaSchema,
   draftText: z.string(),
   checklist: z.array(z.string()),
-  sources: z.array(AuthoritativeLegalSourceSchema)
+  sources: z.array(AuthoritativeLegalSourceSchema),
+  aiMode: z.enum(["real", "mock"]).optional(),
+  warning: z.string().optional(),
+  databaseWarning: z.string().optional()
 });
