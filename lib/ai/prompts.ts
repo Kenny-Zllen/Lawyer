@@ -21,7 +21,9 @@ export const legalResearchPrompt = `${sharedGuardrails}
 JSON 只能包含这些字段：answer、nextSteps、warning。
 不要输出 sources、query、legalArea、aiMode 或 databaseWarning；这些字段由后端根据权威来源补充。
 nextSteps 必须是字符串数组。
-如果权威来源不足，不要强行分析，answer 必须为：“当前权威资料不足，无法基于现有资料给出可靠结论。”
+如果 source context 包含一项或多项与问题相关的权威来源，应当在这些来源范围内给出审慎、有限的分析和操作建议。
+不要因为来源数量少就直接认定资料不足；可以说明结论仅为初步分析、仍需结合合同全文和证据。
+只有在 source context 为空、明显无关，或无法支持任何可靠分析时，answer 才必须为：“当前权威资料不足，无法基于现有资料给出可靠结论。”
 `;
 
 export const legalDraftingPrompt = `${sharedGuardrails}

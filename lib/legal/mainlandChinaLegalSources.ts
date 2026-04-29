@@ -10,7 +10,7 @@ export const mainlandChinaLegalSources: AuthoritativeLegalSource[] = [
     legalArea: "合同",
     jurisdiction: "中华人民共和国大陆",
     url: "https://flk.npc.gov.cn/",
-    keywords: ["合同", "违约", "解除", "格式条款", "买卖", "服务协议", "保密"],
+    keywords: ["合同", "违约", "违约金", "逾期", "交付", "履行", "损失", "解除", "格式条款", "买卖", "服务协议", "保密"],
     summary: "规定合同订立、效力、履行、保全、变更转让、终止、违约责任及典型合同规则。",
     relevantArticles: ["第四百六十九条", "第四百九十六条", "第五百零九条", "第五百六十三条", "第五百七十七条"]
   },
@@ -87,7 +87,7 @@ export const mainlandChinaLegalSources: AuthoritativeLegalSource[] = [
     effectiveDate: "2023-12-05",
     legalArea: "合同",
     jurisdiction: "中华人民共和国大陆",
-    keywords: ["合同编通则", "合同解释", "预约合同", "违约责任", "债权人代位权"],
+    keywords: ["合同编通则", "合同解释", "预约合同", "违约责任", "违约金", "逾期", "交付", "履行", "损失", "债权人代位权"],
     summary: "就民法典合同编通则适用中的合同解释、预约合同、履行抗辩、违约责任等作出细化。",
     relevantArticles: ["第一条", "第六条", "第二十六条", "第五十九条", "第六十八条"]
   }
