@@ -13,8 +13,8 @@ export function createMockLitigationAnalysis(
 ): LitigationAnalysisResult {
   const legalBasis = sources.slice(0, 4).map((source) => ({
     title: source.title,
-    articleNumber: source.relevantArticles[0],
-    sourceName: source.title,
+    articleNumber: source.articleNumber,
+    sourceName: source.sourceName,
     relevance: `可作为分析${request.caseType}中实体权利、程序安排或证据责任的参考依据。`
   }));
   const existingEvidence = parseEvidence(request.existingEvidence);

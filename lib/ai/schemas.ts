@@ -18,15 +18,27 @@ export const ImportanceSchema = z.enum(["high", "medium", "low"]);
 export const AuthoritativeLegalSourceSchema = z.object({
   id: z.string(),
   title: z.string(),
-  authority: z.enum(["法律", "行政法规", "司法解释", "部门规章", "指导性案例", "司法文件"]),
-  issuingBody: z.string(),
-  effectiveDate: z.string(),
-  legalArea: LegalAreaSchema,
-  jurisdiction: z.literal("中华人民共和国大陆"),
+  sourceType: z.enum([
+    "law",
+    "judicial_interpretation",
+    "evidence_rule",
+    "procedural_rule",
+    "guiding_case",
+    "court_case",
+    "government_guidance",
+    "other"
+  ]),
+  issuingAuthority: z.string(),
+  sourceName: z.string(),
   url: z.string().optional(),
+  effectiveDate: z.string().optional(),
+  articleNumber: z.string().optional(),
+  content: z.string(),
+  jurisdiction: z.literal("中国大陆"),
+  reliabilityLevel: z.enum(["official", "high", "medium"]),
+  legalArea: z.array(z.string()),
   keywords: z.array(z.string()),
-  summary: z.string(),
-  relevantArticles: z.array(z.string())
+  scenarioTags: z.array(z.string())
 });
 
 export const ContractReviewResultSchema = z.object({

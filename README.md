@@ -1,6 +1,6 @@
 # 中国大陆法律 AI 工作台 MVP
 
-面向律师、企业法务和中小企业主的“中国大陆民商事合同 AI 工作台”。当前第三阶段支持 API 驱动的合同审查、法律检索辅助、法律文书生成、真实 OpenAI 兼容大模型调用、Prisma 数据库结构，以及 TXT / DOCX / PDF 文本解析。
+面向律师、企业法务和中小企业主的“中国大陆民商事法律 AI 工作台”。当前版本支持 API 驱动的合同审查、法律检索辅助、法律文书生成、案件分析与诉讼文书助手、真实 OpenAI 兼容大模型调用、Prisma 数据库结构，以及 TXT / DOCX / PDF 文本解析。
 
 ## 当前功能
 
@@ -8,15 +8,18 @@
 - 合同审查：`/contract-review`
 - 法律检索：`/legal-research`
 - 文书生成：`/legal-drafting`
+- 案件分析与诉讼文书助手：`/litigation-assistant`
 - API routes：
   - `POST /api/contracts/upload`
   - `POST /api/contracts/review`
   - `POST /api/legal-research`
   - `POST /api/legal-drafting`
+  - `POST /api/litigation-analysis`
 - 合同上传支持 TXT / DOCX / PDF，限制 10MB
 - DOCX/PDF 基础文本提取，暂不支持 OCR
 - OpenAI API Key 缺失时返回明确 mock fallback
 - DATABASE_URL 缺失或数据库不可用时继续使用内存 mock store
+- 本地中国大陆民商事规则摘要库，覆盖合同、证据、民事诉讼、借贷、租赁、买卖、劳动、公司和侵权等基础场景
 
 ## 技术栈
 
@@ -105,11 +108,25 @@ npm run build:webpack
 1. 合同审查：进入 `/contract-review`，上传 TXT / DOCX / PDF 或粘贴合同文本，填写审查视角，生成审查结果。
 2. 法律检索：进入 `/legal-research`，选择法律领域并输入问题，查看权威来源和结构化分析。
 3. 文书生成：进入 `/legal-drafting`，选择模板，填写主体、场景和关键条款，生成文书草稿。
+4. 案件分析：进入 `/litigation-assistant`，填写诉讼角色、案件类型、案情、证据和问题，生成诉讼策略、证据缺口和文书草稿。
+
+## 权威来源与检索
+
+当前 `lib/legal/mainlandChinaLegalSources.ts` 是本地中国大陆民商事规则摘要库，不是完整法规库。每条来源包含：
+
+- `sourceType`：法律、司法解释、证据规则、程序规则等
+- `issuingAuthority`、`sourceName`、`effectiveDate`、`articleNumber`
+- `content`：规则摘要，不编造完整法条原文
+- `reliabilityLevel`：`official`、`high`、`medium`
+- `legalArea`、`keywords`、`scenarioTags`
+
+检索逻辑会综合关键词、来源名称、标题、规则摘要、法律领域、场景标签和可靠性评分。AI 只能基于检索到的 source context 输出；如果没有相关来源，应明确说明资料不足。
 
 ## 当前限制
 
-- 法律知识库仍是本地 mock 数据，不是真实权威法律数据库。
+- 法律知识库仍是本地规则摘要库，不是真实完整权威法律数据库，也不包含可检索的全量法条原文、案例库或裁判文书库。
 - AI 必须基于 source context；资料不足时应输出“当前权威资料不足，无法基于现有资料给出可靠结论。”
+- 规则摘要用于提高 MVP 检索质量，不应替代对最新官方文本、司法解释、地方规定和具体裁判规则的核验。
 - PDF 仅做基础文本提取，不支持扫描件 OCR。
 - 数据库未配置时使用内存 store，服务重启后数据会丢失。
 - 当前没有用户登录、权限、多租户和完整历史记录界面。
