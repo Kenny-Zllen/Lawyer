@@ -13,16 +13,35 @@ export const runtime = "nodejs";
 
 const ReviewRequestSchema = z.object({
   contractId: z.string().min(1),
+  rawText: z.string().optional(),
+  fileName: z.string().optional(),
+  fileType: z.string().optional(),
   reviewingParty: z.string().optional()
 });
 
 export async function POST(request: Request) {
   try {
     const payload = ReviewRequestSchema.parse(await request.json());
-    const contract = await findContractById(payload.contractId);
+    const storedContract = await findContractById(payload.contractId);
+    const contract =
+      storedContract ??
+      (payload.rawText?.trim()
+        ? {
+            contractId: payload.contractId,
+            fileName: payload.fileName ?? "contract.txt",
+            fileType: payload.fileType ?? "text/plain",
+            fileSize: Buffer.byteLength(payload.rawText),
+            rawText: payload.rawText,
+            rawTextPreview: payload.rawText.slice(0, 500),
+            createdAt: new Date().toISOString()
+          }
+        : null);
 
     if (!contract) {
-      return NextResponse.json({ error: "未找到合同，请先上传合同文件。" }, { status: 404 });
+      return NextResponse.json(
+        { error: "未找到合同文本，请重新上传文件或粘贴合同内容后再审查。" },
+        { status: 404 }
+      );
     }
 
     const sources = retrieveAuthoritativeLegalSources(
@@ -75,6 +94,8 @@ export async function POST(request: Request) {
       return NextResponse.json(result);
     }
   } catch (error) {
+    console.error("[contract-review] failed", summarizeError(error));
+
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "请求参数无效。" }, { status: 400 });
     }

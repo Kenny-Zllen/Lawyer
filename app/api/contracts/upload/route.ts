@@ -37,6 +37,7 @@ export async function POST(request: Request) {
       contractId: contract.contractId,
       fileName: contract.fileName,
       fileType: contract.fileType,
+      rawText: contract.rawText,
       rawTextPreview: contract.rawTextPreview,
       databaseWarning
     });
@@ -44,6 +45,18 @@ export async function POST(request: Request) {
     if (error instanceof DocumentExtractionError) {
       return NextResponse.json({ error: error.message }, { status: error.status });
     }
-    return NextResponse.json({ error: "合同上传失败，请稍后重试。" }, { status: 500 });
+    console.error("[contracts-upload] failed", summarizeError(error));
+    return NextResponse.json(
+      { error: "合同上传失败，请确认文件格式、大小和文本内容后重试。" },
+      { status: 500 }
+    );
   }
+}
+
+function summarizeError(error: unknown) {
+  if (error instanceof Error) {
+    return { name: error.name, message: error.message };
+  }
+
+  return { name: "UnknownError", message: String(error) };
 }

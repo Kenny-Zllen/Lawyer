@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { readJsonResponse } from "@/lib/api/client";
 import {
   aiFallbackMessage,
   getFriendlyErrorMessage,
@@ -30,6 +31,7 @@ interface UploadedContractResponse {
   contractId: string;
   fileName: string;
   fileType: string;
+  rawText: string;
   rawTextPreview: string;
   databaseWarning?: string;
 }
@@ -65,9 +67,18 @@ export default function ContractReviewPage() {
       const reviewResponse = await fetch("/api/contracts/review", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contractId: contract.contractId, reviewingParty })
+        body: JSON.stringify({
+          contractId: contract.contractId,
+          fileName: contract.fileName,
+          fileType: contract.fileType,
+          rawText: contract.rawText,
+          reviewingParty
+        })
       });
-      const reviewPayload = await reviewResponse.json();
+      const reviewPayload = await readJsonResponse<ContractReviewResult & { error?: string }>(
+        reviewResponse,
+        "合同审查服务暂不可用，请稍后重试。"
+      );
 
       if (!reviewResponse.ok) {
         throw new Error(getFriendlyErrorMessage(reviewPayload, "合同审查失败，请检查输入后重试。"));
@@ -95,7 +106,10 @@ export default function ContractReviewPage() {
       method: "POST",
       body: formData
     });
-    const uploadPayload = await uploadResponse.json();
+    const uploadPayload = await readJsonResponse<UploadedContractResponse & { error?: string }>(
+      uploadResponse,
+      "合同上传服务暂不可用，请稍后重试。"
+    );
 
     if (!uploadResponse.ok) {
       throw new Error(getFriendlyErrorMessage(uploadPayload, "合同上传失败，请确认文件格式和大小后重试。"));

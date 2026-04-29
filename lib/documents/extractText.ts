@@ -1,6 +1,3 @@
-import mammoth from "mammoth";
-import { PDFParse } from "pdf-parse";
-
 export const MAX_UPLOAD_SIZE_BYTES = 10 * 1024 * 1024;
 
 const supportedTypes = new Set([
@@ -44,12 +41,14 @@ export async function extractTextFromFile(file: File): Promise<string> {
     const buffer = Buffer.from(await file.arrayBuffer());
 
     if (isDocxFile(file)) {
+      const mammoth = await import("mammoth");
       const result = await mammoth.extractRawText({ buffer });
       return normalizeExtractedText(result.value);
     }
 
     if (isPdfFile(file)) {
       // TODO: Add OCR for scanned PDFs in a later phase.
+      const { PDFParse } = await import("pdf-parse");
       const parser = new PDFParse({ data: new Uint8Array(buffer) });
       try {
         const result = await parser.getText();
