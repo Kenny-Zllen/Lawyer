@@ -5,6 +5,7 @@ import { FileText, Upload } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { CopyButton } from "@/components/copy-button";
 import { ErrorState } from "@/components/error-state";
+import { ExportDocxButton } from "@/components/export-docx-button";
 import { LegalSourceCard } from "@/components/legal-source-card";
 import { LoadingState } from "@/components/loading-state";
 import { PrivacyWarning } from "@/components/privacy-warning";
@@ -14,6 +15,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  aiFallbackMessage,
+  getFriendlyErrorMessage,
+  normalizeAiWarning,
+  normalizeDatabaseWarning
+} from "@/lib/legal/userMessages";
 import type { ContractReviewResult } from "@/types/legal";
 
 const sampleContract =
@@ -63,12 +70,12 @@ export default function ContractReviewPage() {
       const reviewPayload = await reviewResponse.json();
 
       if (!reviewResponse.ok) {
-        throw new Error(reviewPayload.error ?? "合同审查失败，请稍后重试。");
+        throw new Error(getFriendlyErrorMessage(reviewPayload, "合同审查失败，请检查输入后重试。"));
       }
 
       setResult(reviewPayload);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "合同审查失败，请稍后重试。");
+      setError(requestError instanceof Error ? requestError.message : "合同审查失败，请检查输入后重试。");
       setResult(null);
     } finally {
       setIsLoading(false);
@@ -91,7 +98,7 @@ export default function ContractReviewPage() {
     const uploadPayload = await uploadResponse.json();
 
     if (!uploadResponse.ok) {
-      throw new Error(uploadPayload.error ?? "合同上传失败，请稍后重试。");
+      throw new Error(getFriendlyErrorMessage(uploadPayload, "合同上传失败，请确认文件格式和大小后重试。"));
     }
 
     setUploadedContract(uploadPayload);
@@ -107,7 +114,7 @@ export default function ContractReviewPage() {
   return (
     <AppShell
       title="合同审查"
-      description="上传 TXT 合同或粘贴合同内容，通过 mock API 生成风险摘要、修改建议和大陆法权威依据。"
+      description="上传 TXT / DOCX / PDF 合同或粘贴合同内容，生成风险摘要、修改建议和中国大陆法依据。"
     >
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <section className="space-y-5">
@@ -148,10 +155,10 @@ export default function ContractReviewPage() {
                 value={contractText}
                 onChange={(event) => setContractText(event.target.value)}
                 rows={10}
-                placeholder="也可以直接粘贴合同条款，系统会作为 TXT 草稿上传到 mock API"
+                placeholder="也可以直接粘贴合同条款，系统会作为 TXT 草稿提交分析"
               />
               <Button onClick={generateReview} disabled={isLoading}>
-                通过 API 生成 mock 审查结果
+                生成合同审查报告
               </Button>
             </CardContent>
           </Card>
@@ -172,21 +179,38 @@ export default function ContractReviewPage() {
             </Card>
           )}
           {result && (
-            <ResultSection title="审查结论" action={<CopyButton text={copyText} />}>
+            <ResultSection
+              title="审查结论"
+              action={
+                <div className="flex flex-wrap justify-end gap-2">
+                  <ExportDocxButton
+                    endpoint="/api/export/contract-review"
+                    payload={result}
+                    fileName="合同审查报告.docx"
+                  />
+                  <CopyButton text={copyText} />
+                </div>
+              }
+            >
               <div className="space-y-5">
                 {result.warning?.includes("OPENAI_API_KEY") && (
                   <p className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-sm text-[#5c4618]">
-                    当前未配置 AI API Key，无法调用真实大模型。
+                    {aiFallbackMessage}
                   </p>
                 )}
                 {result.aiMode === "mock" && (
                   <p className="rounded-md border border-border bg-muted p-3 text-sm text-muted-foreground">
-                    当前为 mock 示例结果，非真实 AI 分析。
+                    当前为系统 fallback 示例结果，非真实 AI 分析。
+                  </p>
+                )}
+                {normalizeAiWarning(result.warning) && !result.warning?.includes("OPENAI_API_KEY") && (
+                  <p className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-sm text-[#5c4618]">
+                    {normalizeAiWarning(result.warning)}
                   </p>
                 )}
                 {result.databaseWarning && (
                   <p className="rounded-md border border-border bg-card p-3 text-sm text-muted-foreground">
-                    {result.databaseWarning}
+                    {normalizeDatabaseWarning(result.databaseWarning)}
                   </p>
                 )}
                 <div className="flex flex-wrap items-center gap-3">

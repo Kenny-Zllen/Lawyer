@@ -1,7 +1,8 @@
 import { Scale } from "lucide-react";
+import { betaLegalDisclaimer } from "@/lib/legal/userMessages";
 
 export const LEGAL_DISCLAIMER =
-  "本工具仅提供 AI 生成的法律信息、合同审查和文书草稿支持，不构成正式法律意见。请在依赖任何输出前咨询合资格律师。";
+  betaLegalDisclaimer;
 
 export function DisclaimerBanner() {
   return (

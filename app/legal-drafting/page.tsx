@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { CopyButton } from "@/components/copy-button";
 import { ErrorState } from "@/components/error-state";
+import { ExportDocxButton } from "@/components/export-docx-button";
 import { LegalSourceCard } from "@/components/legal-source-card";
 import { LoadingState } from "@/components/loading-state";
 import { PrivacyWarning } from "@/components/privacy-warning";
@@ -13,6 +14,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { documentTemplates, getDocumentTemplate } from "@/lib/legal/documentTemplates";
+import {
+  aiFallbackMessage,
+  getFriendlyErrorMessage,
+  normalizeAiWarning,
+  normalizeDatabaseWarning
+} from "@/lib/legal/userMessages";
 import type { DraftingRequest, DraftingResult } from "@/types/legal";
 
 export default function LegalDraftingPage() {
@@ -52,12 +59,12 @@ export default function LegalDraftingPage() {
       const payload = await response.json();
 
       if (!response.ok) {
-        throw new Error(payload.error ?? "文书生成失败，请稍后重试。");
+        throw new Error(getFriendlyErrorMessage(payload, "文书生成失败，请补充完整信息后重试。"));
       }
 
       setResult(payload);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "文书生成失败，请稍后重试。");
+      setError(requestError instanceof Error ? requestError.message : "文书生成失败，请补充完整信息后重试。");
       setResult(null);
     } finally {
       setIsLoading(false);
@@ -67,7 +74,7 @@ export default function LegalDraftingPage() {
   return (
     <AppShell
       title="法律文书生成"
-      description="基于本地模板，通过 mock API 生成可复制的大陆民商事文书草稿。"
+      description="基于内置模板和中国大陆法规则摘要，生成可复制、可导出的民商事文书草稿。"
     >
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <section className="space-y-5">
@@ -121,28 +128,45 @@ export default function LegalDraftingPage() {
                 />
               </label>
               <Button onClick={draft} disabled={isLoading}>
-                通过 API 生成 mock 文书草稿
+                生成文书草稿
               </Button>
             </CardContent>
           </Card>
           {error && <ErrorState message={error} />}
           {isLoading && <LoadingState label="正在调用文书生成 API" />}
           {result && (
-            <ResultSection title={result.title} action={<CopyButton text={copyText} />}>
+            <ResultSection
+              title={result.title}
+              action={
+                <div className="flex flex-wrap justify-end gap-2">
+                  <ExportDocxButton
+                    endpoint="/api/export/legal-drafting"
+                    payload={result}
+                    fileName="法律文书草稿.docx"
+                  />
+                  <CopyButton text={copyText} />
+                </div>
+              }
+            >
               <div className="space-y-4">
                 {result.warning?.includes("OPENAI_API_KEY") && (
                   <p className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-sm text-[#5c4618]">
-                    当前未配置 AI API Key，无法调用真实大模型。
+                    {aiFallbackMessage}
                   </p>
                 )}
                 {result.aiMode === "mock" && (
                   <p className="rounded-md border border-border bg-muted p-3 text-sm text-muted-foreground">
-                    当前为 mock 示例结果，非真实 AI 分析。
+                    当前为系统 fallback 示例结果，非真实 AI 分析。
+                  </p>
+                )}
+                {normalizeAiWarning(result.warning) && !result.warning?.includes("OPENAI_API_KEY") && (
+                  <p className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-sm text-[#5c4618]">
+                    {normalizeAiWarning(result.warning)}
                   </p>
                 )}
                 {result.databaseWarning && (
                   <p className="rounded-md border border-border bg-card p-3 text-sm text-muted-foreground">
-                    {result.databaseWarning}
+                    {normalizeDatabaseWarning(result.databaseWarning)}
                   </p>
                 )}
                 <pre className="whitespace-pre-wrap rounded-md border border-border bg-muted p-4 text-sm leading-7">

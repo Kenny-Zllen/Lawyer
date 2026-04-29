@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { getPrismaClient } from "@/lib/prisma";
 import type { DraftingRequest, LegalArea, LitigationRequest } from "@/types/legal";
+import { databaseUnavailableMessage } from "./userMessages";
 
 export async function saveLegalResearchResult({
   question,
@@ -13,7 +14,7 @@ export async function saveLegalResearchResult({
 }) {
   const prisma = getPrismaClient();
   if (!prisma) {
-    return { databaseWarning: "DATABASE_URL 未配置，检索结果未写入数据库。" };
+    return { databaseWarning: databaseUnavailableMessage };
   }
 
   try {
@@ -27,7 +28,7 @@ export async function saveLegalResearchResult({
     });
     return {};
   } catch {
-    return { databaseWarning: "数据库暂不可用，检索结果未写入数据库。" };
+    return { databaseWarning: databaseUnavailableMessage };
   }
 }
 
@@ -40,7 +41,7 @@ export async function saveLegalDraftResult({
 }) {
   const prisma = getPrismaClient();
   if (!prisma) {
-    return { databaseWarning: "DATABASE_URL 未配置，文书结果未写入数据库。" };
+    return { databaseWarning: databaseUnavailableMessage };
   }
 
   try {
@@ -54,7 +55,7 @@ export async function saveLegalDraftResult({
     });
     return {};
   } catch {
-    return { databaseWarning: "数据库暂不可用，文书结果未写入数据库。" };
+    return { databaseWarning: databaseUnavailableMessage };
   }
 }
 
@@ -67,7 +68,7 @@ export async function saveLitigationAnalysisResult({
 }) {
   const prisma = getPrismaClient();
   if (!prisma) {
-    return { databaseWarning: "DATABASE_URL 未配置，案件分析结果未写入数据库。" };
+    return { databaseWarning: databaseUnavailableMessage };
   }
 
   try {
@@ -83,7 +84,7 @@ export async function saveLitigationAnalysisResult({
     return {};
   } catch (error) {
     console.warn("[litigation-analysis] save skipped", summarizeSaveError(error));
-    return { databaseWarning: "数据库暂不可用，案件分析结果未写入数据库。" };
+    return { databaseWarning: databaseUnavailableMessage };
   }
 }
 

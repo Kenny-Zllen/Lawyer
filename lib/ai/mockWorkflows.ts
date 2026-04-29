@@ -9,6 +9,7 @@ import type {
 import { classifyLegalArea } from "@/lib/legal/classifyLegalArea";
 import { getDocumentTemplate } from "@/lib/legal/documentTemplates";
 import { retrieveAuthoritativeLegalSources } from "@/lib/legal/retrieveAuthoritativeLegalSources";
+import { aiFallbackMessage } from "@/lib/legal/userMessages";
 import {
   ContractReviewResultSchema,
   DraftingResultSchema,
@@ -29,11 +30,11 @@ export function buildMockContractReviewResult(
 
   const result: ContractReviewResult = {
     id: `review-${contractId}`,
-    title: "合同审查 mock 结果",
+    title: "合同审查报告",
     legalArea,
     overallRisk,
     summary:
-      "该合同已具备基本交易安排，但仍需结合交易背景细化履约标准、付款节点、风险分配和争议解决机制。当前结论由 mock workflow 基于上传文本和本地权威来源生成。",
+      "该合同已具备基本交易安排，但仍需结合交易背景细化履约标准、付款节点、风险分配和争议解决机制。当前结论由系统 fallback workflow 基于上传文本和内置规则摘要库生成，需由律师核验。",
     keyClauses,
     keyIssues: [
       {
@@ -64,7 +65,7 @@ export function buildMockContractReviewResult(
     ],
     sources: retrieveAuthoritativeLegalSources(rawText, 5),
     aiMode: "mock",
-    warning: "当前未配置 OPENAI_API_KEY，返回 mock 示例结果。"
+    warning: aiFallbackMessage
   };
 
   return ContractReviewResultSchema.parse(result);
@@ -84,7 +85,7 @@ export function buildMockLegalResearchResult(
     answer:
       sources.length < 2
         ? "当前权威资料不足，无法基于现有资料给出可靠结论。"
-        : "基于当前 mock 权威来源，建议先核对合同约定、履行证据与民法典合同编规则。若缺少明确约定，可围绕补充协议、书面催告、损失证明和争议解决条款制定风险控制方案。",
+        : "基于当前内置规则摘要库，建议先核对合同约定、履行证据与民法典合同编规则。若缺少明确约定，可围绕补充协议、书面催告、损失证明和争议解决条款制定风险控制方案。",
     nextSteps:
       sources.length < 2
         ? ["补充更具体的事实、合同类型、争议阶段和关键词后重新检索。"]
@@ -94,7 +95,7 @@ export function buildMockLegalResearchResult(
             "结合管辖或仲裁条款评估催告、谈判、诉讼或仲裁路径。"
           ],
     aiMode: "mock",
-    warning: "当前未配置 OPENAI_API_KEY，返回 mock 示例结果。"
+    warning: aiFallbackMessage
   };
 
   return LegalResearchResultSchema.parse(result);
@@ -108,7 +109,7 @@ export function buildMockDraftingResult(request: DraftingRequest): DraftingResul
   );
 
   const result: DraftingResult = {
-    title: `${template.name} mock 草稿`,
+    title: `${template.name}草稿`,
     legalArea: template.legalArea,
     draftText: buildDraftText(request),
     checklist: [
@@ -119,7 +120,7 @@ export function buildMockDraftingResult(request: DraftingRequest): DraftingResul
     ],
     sources,
     aiMode: "mock",
-    warning: "当前未配置 OPENAI_API_KEY，返回 mock 示例结果。"
+    warning: aiFallbackMessage
   };
 
   return DraftingResultSchema.parse(result);
@@ -156,5 +157,5 @@ ${template.sections
 本草稿仅面向中华人民共和国大陆法域。双方可约定由有管辖权的人民法院或仲裁机构解决争议，具体安排应与交易结构及可执行性相匹配。
 
 六、提示
-本草稿由 mock workflow 生成，不构成正式法律意见，签署或发送前应由合资格律师审阅。`;
+本草稿由系统 fallback workflow 生成，不构成正式法律意见，签署或发送前应由合资格律师审阅。`;
 }

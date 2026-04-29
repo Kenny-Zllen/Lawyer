@@ -3,6 +3,7 @@ import type {
   LitigationAnalysisResult,
   LitigationRequest
 } from "@/types/legal";
+import { aiFallbackMessage } from "./userMessages";
 
 const disclaimer =
   "本工具仅提供 AI 生成的法律信息、诉讼分析和文书草稿支持，不构成正式法律意见。请在依赖任何输出前咨询合资格律师。";
@@ -82,7 +83,7 @@ export function createMockLitigationAnalysis(
     ],
     disclaimer,
     isMockFallback: true,
-    fallbackReason: "AI 调用失败，已返回 mock 示例结果。"
+    fallbackReason: aiFallbackMessage
   };
 }
 

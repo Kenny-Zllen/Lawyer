@@ -151,4 +151,5 @@ export type LitigationAnalysisResult = {
   disclaimer: string;
   isMockFallback?: boolean;
   fallbackReason?: string;
+  databaseWarning?: string;
 };

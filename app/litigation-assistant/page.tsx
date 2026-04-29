@@ -3,12 +3,19 @@
 import { useMemo, useState } from "react";
 import { CopyButton } from "@/components/copy-button";
 import { ErrorState } from "@/components/error-state";
+import { ExportDocxButton } from "@/components/export-docx-button";
 import { LoadingState } from "@/components/loading-state";
 import { ResultSection } from "@/components/result-section";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  aiFallbackMessage,
+  getFriendlyErrorMessage,
+  litigationPrivacyNotice,
+  normalizeDatabaseWarning
+} from "@/lib/legal/userMessages";
 import type {
   LitigationAnalysisResult,
   LitigationCaseType,
@@ -40,9 +47,6 @@ const priorityClass = {
   medium: "border-[#d7b15f] bg-[#fff7df] text-[#735315]",
   low: "border-[#7ca982] bg-[#edf7ef] text-[#255f31]"
 };
-
-const litigationDisclaimer =
-  "本工具仅提供 AI 生成的法律信息、诉讼分析和文书草稿支持，不构成正式法律意见。请在依赖任何输出前咨询合资格律师。";
 
 export default function LitigationAssistantPage() {
   const [request, setRequest] = useState<LitigationRequest>({
@@ -90,12 +94,12 @@ export default function LitigationAssistantPage() {
       const payload = await response.json();
 
       if (!response.ok) {
-        throw new Error(payload.error ?? "案件分析失败，请稍后重试。");
+        throw new Error(getFriendlyErrorMessage(payload, "案件分析失败，请补充案情和问题后重试。"));
       }
 
       setResult(payload);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "案件分析失败，请稍后重试。");
+      setError(requestError instanceof Error ? requestError.message : "案件分析失败，请补充案情和问题后重试。");
       setResult(null);
     } finally {
       setIsLoading(false);
@@ -182,7 +186,7 @@ export default function LitigationAssistantPage() {
                 />
               </label>
               <div className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-sm leading-6 text-[#5c4618]">
-                请勿上传涉密、敏感个人信息或受律师保密特权保护的完整材料。本工具不会替代律师对证据原件、诉讼时效、管辖和程序风险的专业判断。
+                {litigationPrivacyNotice}
               </div>
               <Button onClick={submit} disabled={isLoading}>
                 生成案件分析与诉讼文书草稿
@@ -203,7 +207,7 @@ export default function LitigationAssistantPage() {
               <CardTitle>诉讼模块提示</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm leading-6 text-muted-foreground">
-              <p>{litigationDisclaimer}</p>
+              <p>本工具仅提供 AI 生成的法律信息、诉讼分析和文书草稿支持，不构成正式法律意见。请在依赖任何输出前咨询合资格律师。</p>
               <p>仅支持中国大陆民商事案件初步分析，不处理刑事辩护、行政诉讼、港澳台或境外法律。</p>
             </CardContent>
           </Card>
@@ -222,11 +226,28 @@ function LitigationResult({
 }) {
   return (
     <div className="space-y-5">
-      <ResultSection title="案件分析结果" action={<CopyButton text={copyAll} />}>
+      <ResultSection
+        title="案件分析结果"
+        action={
+          <div className="flex flex-wrap justify-end gap-2">
+            <ExportDocxButton
+              endpoint="/api/export/litigation-analysis"
+              payload={result}
+              fileName="案件分析与诉讼文书报告.docx"
+            />
+            <CopyButton text={copyAll} />
+          </div>
+        }
+      >
         <div className="space-y-4 text-sm leading-6">
           {result.isMockFallback && (
             <div className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-[#5c4618]">
-              当前为 mock fallback 示例结果，真实 AI 调用失败。{result.fallbackReason}
+              {result.fallbackReason ?? aiFallbackMessage}
+            </div>
+          )}
+          {"databaseWarning" in result && typeof result.databaseWarning === "string" && (
+            <div className="rounded-md border border-border bg-card p-3 text-muted-foreground">
+              {normalizeDatabaseWarning(result.databaseWarning)}
             </div>
           )}
           <p className="rounded-md border border-border bg-muted p-3">{result.disclaimer}</p>
@@ -275,16 +296,25 @@ function LitigationResult({
           </div>
           <div>
             <h3 className="font-semibold">缺失证据</h3>
-            <div className="mt-3 grid gap-3 md:grid-cols-2">
-              {result.evidenceAnalysis.missingEvidence.map((evidence) => (
-                <div key={evidence.evidenceName} className="rounded-md border border-border p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <h4 className="font-semibold">{evidence.evidenceName}</h4>
-                    <PriorityBadge value={evidence.priority} />
-                  </div>
-                  <p className="mt-2 text-muted-foreground">{evidence.purpose}</p>
-                </div>
-              ))}
+            <div className="mt-3 overflow-x-auto rounded-md border border-border">
+              <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+                <thead className="bg-muted text-foreground">
+                  <tr>
+                    <th className="border-b border-border px-3 py-2 font-semibold">证据名称</th>
+                    <th className="border-b border-border px-3 py-2 font-semibold">证明目的</th>
+                    <th className="border-b border-border px-3 py-2 font-semibold">优先级</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.evidenceAnalysis.missingEvidence.map((evidence) => (
+                    <tr key={evidence.evidenceName} className="border-b border-border last:border-0">
+                      <td className="px-3 py-3 font-medium">{evidence.evidenceName}</td>
+                      <td className="px-3 py-3 text-muted-foreground">{evidence.purpose}</td>
+                      <td className="px-3 py-3"><PriorityBadge value={evidence.priority} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
           <div>
@@ -295,14 +325,25 @@ function LitigationResult({
       </ResultSection>
 
       <ResultSection title="对方抗辩预判与应对">
-        <div className="space-y-3">
-          {result.opposingArgumentsAndResponses.map((item) => (
-            <div key={item.possibleOpposingArgument} className="rounded-md border border-border p-4 text-sm leading-6">
-              <p><span className="font-semibold">可能抗辩：</span>{item.possibleOpposingArgument}</p>
-              <p className="mt-2"><span className="font-semibold">应对策略：</span>{item.responseStrategy}</p>
-              <p className="mt-2 text-muted-foreground">需要证据：{item.neededEvidence.join("、")}</p>
-            </div>
-          ))}
+        <div className="overflow-x-auto rounded-md border border-border">
+          <table className="w-full min-w-[760px] border-collapse text-left text-sm leading-6">
+            <thead className="bg-muted text-foreground">
+              <tr>
+                <th className="border-b border-border px-3 py-2 font-semibold">对方可能观点</th>
+                <th className="border-b border-border px-3 py-2 font-semibold">我方应对策略</th>
+                <th className="border-b border-border px-3 py-2 font-semibold">所需证据</th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.opposingArgumentsAndResponses.map((item) => (
+                <tr key={item.possibleOpposingArgument} className="border-b border-border last:border-0">
+                  <td className="px-3 py-3 align-top">{item.possibleOpposingArgument}</td>
+                  <td className="px-3 py-3 align-top text-muted-foreground">{item.responseStrategy}</td>
+                  <td className="px-3 py-3 align-top text-muted-foreground">{item.neededEvidence.join("、")}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </ResultSection>
 
@@ -318,7 +359,9 @@ function LitigationResult({
         <div className="grid gap-5 md:grid-cols-2">
           <div>
             <h3 className="text-sm font-semibold">风险提示</h3>
-            <BulletList items={result.riskWarnings} />
+            <div className="mt-3 rounded-md border border-[#d2786d] bg-[#fff0ed] p-3 text-[#90251c]">
+              <BulletList items={result.riskWarnings} />
+            </div>
           </div>
           <div>
             <h3 className="text-sm font-semibold">下一步建议</h3>

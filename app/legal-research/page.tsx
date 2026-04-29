@@ -4,12 +4,19 @@ import { useMemo, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { CopyButton } from "@/components/copy-button";
 import { ErrorState } from "@/components/error-state";
+import { ExportDocxButton } from "@/components/export-docx-button";
 import { LegalSourceCard } from "@/components/legal-source-card";
 import { LoadingState } from "@/components/loading-state";
 import { ResultSection } from "@/components/result-section";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  aiFallbackMessage,
+  getFriendlyErrorMessage,
+  normalizeAiWarning,
+  normalizeDatabaseWarning
+} from "@/lib/legal/userMessages";
 import type { LegalArea, LegalResearchResult } from "@/types/legal";
 
 const legalAreas: LegalArea[] = ["合同", "劳动", "公司", "争议解决", "其他"];
@@ -45,12 +52,12 @@ export default function LegalResearchPage() {
       const payload = await response.json();
 
       if (!response.ok) {
-        throw new Error(payload.error ?? "法律检索失败，请稍后重试。");
+        throw new Error(getFriendlyErrorMessage(payload, "法律检索失败，请补充问题背景后重试。"));
       }
 
       setResult(payload);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "法律检索失败，请稍后重试。");
+      setError(requestError instanceof Error ? requestError.message : "法律检索失败，请补充问题背景后重试。");
       setResult(null);
     } finally {
       setIsLoading(false);
@@ -90,33 +97,45 @@ export default function LegalResearchPage() {
                 placeholder="请输入要检索的中国大陆法律问题"
               />
               <Button onClick={research} disabled={isLoading}>
-                通过 API 检索权威来源
+                检索内置规则库并生成分析
               </Button>
             </CardContent>
           </Card>
           {error && <ErrorState message={error} />}
           {isLoading && <LoadingState label="正在调用法律检索 API" />}
           {result && (
-            <ResultSection title="初步分析" action={<CopyButton text={copyText} />}>
+            <ResultSection
+              title="初步分析"
+              action={
+                <div className="flex flex-wrap justify-end gap-2">
+                  <ExportDocxButton
+                    endpoint="/api/export/legal-research"
+                    payload={result}
+                    fileName="法律检索报告.docx"
+                  />
+                  <CopyButton text={copyText} />
+                </div>
+              }
+            >
               <div className="space-y-4 text-sm leading-6">
                 {result.warning?.includes("OPENAI_API_KEY") && (
                   <p className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-[#5c4618]">
-                    当前 AI API Key 缺失或无效，请检查 OPENAI_API_KEY。
+                    {aiFallbackMessage}
                   </p>
                 )}
                 {result.warning && !result.warning.includes("OPENAI_API_KEY") && (
                   <p className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-[#5c4618]">
-                    {result.warning}
+                    {normalizeAiWarning(result.warning)}
                   </p>
                 )}
                 {result.aiMode === "mock" && (
                   <p className="rounded-md border border-border bg-muted p-3 text-muted-foreground">
-                    当前为 mock 示例结果，非真实 AI 分析。
+                    当前为系统 fallback 示例结果，非真实 AI 分析。
                   </p>
                 )}
                 {result.databaseWarning && (
                   <p className="rounded-md border border-border bg-card p-3 text-muted-foreground">
-                    {result.databaseWarning}
+                    {normalizeDatabaseWarning(result.databaseWarning)}
                   </p>
                 )}
                 <p className="text-muted-foreground">识别领域：{result.legalArea}</p>
@@ -140,6 +159,7 @@ export default function LegalResearchPage() {
           ) : (
             <p className="rounded-md border border-border bg-card p-4 text-sm leading-6 text-muted-foreground">
               提交检索问题后，API 会返回命中的大陆法权威来源。
+              当前法律来源为内置规则摘要库，非完整法律数据库。
             </p>
           )}
         </aside>

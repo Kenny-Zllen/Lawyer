@@ -39,7 +39,7 @@ export function AppShell({
           ))}
         </nav>
         <div className="absolute bottom-6 left-4 right-4 rounded-md border border-border bg-muted p-3 text-xs leading-5 text-muted-foreground">
-          当前 MVP：真实 AI 可选接入，数据库和 AI 不可用时保留 mock fallback。
+          Beta 试用版：真实 AI 可选接入，服务不可用时返回系统 fallback 示例结果。
         </div>
       </aside>
 

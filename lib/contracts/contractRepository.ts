@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { getPrismaClient } from "@/lib/prisma";
 import type { UploadedContract } from "@/types/legal";
+import { databaseUnavailableMessage } from "@/lib/legal/userMessages";
 import { getContract, saveContract } from "./mockContractStore";
 
 export async function saveUploadedContract(contract: UploadedContract) {
@@ -8,7 +9,7 @@ export async function saveUploadedContract(contract: UploadedContract) {
 
   const prisma = getPrismaClient();
   if (!prisma) {
-    return { contract, databaseWarning: "DATABASE_URL 未配置，合同仅保存到内存 mock store。" };
+    return { contract, databaseWarning: databaseUnavailableMessage };
   }
 
   try {
@@ -22,7 +23,7 @@ export async function saveUploadedContract(contract: UploadedContract) {
     });
     return { contract };
   } catch {
-    return { contract, databaseWarning: "数据库暂不可用，合同已保存到内存 mock store。" };
+    return { contract, databaseWarning: databaseUnavailableMessage };
   }
 }
 
@@ -64,7 +65,7 @@ export async function saveContractReview(
 ) {
   const prisma = getPrismaClient();
   if (!prisma) {
-    return { databaseWarning: "DATABASE_URL 未配置，审查结果未写入数据库。" };
+    return { databaseWarning: databaseUnavailableMessage };
   }
 
   try {
@@ -74,6 +75,6 @@ export async function saveContractReview(
     });
     return {};
   } catch {
-    return { databaseWarning: "数据库暂不可用，审查结果未写入数据库。" };
+    return { databaseWarning: databaseUnavailableMessage };
   }
 }

@@ -8,6 +8,7 @@ import { createMockLitigationAnalysis } from "@/lib/legal/mockLitigationAnalysis
 import { retrieveAuthoritativeLegalSources } from "@/lib/legal/retrieveAuthoritativeLegalSources";
 import { saveLitigationAnalysisResult } from "@/lib/legal/resultRepository";
 import { formatSourceContext } from "@/lib/legal/sourceContext";
+import { aiFallbackMessage } from "@/lib/legal/userMessages";
 import type { LitigationAnalysisResult } from "@/types/legal";
 
 export const runtime = "nodejs";
@@ -93,14 +94,14 @@ function withFallbackReason(
     return {
       ...result,
       isMockFallback: true,
-      fallbackReason: "AI 调用失败，已返回 mock 示例结果。"
+      fallbackReason: aiFallbackMessage
     };
   }
 
   return {
     ...result,
     isMockFallback: true,
-    fallbackReason: "AI 调用失败，已返回 mock 示例结果。"
+    fallbackReason: aiFallbackMessage
   };
 }
 

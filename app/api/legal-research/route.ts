@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { generateJson } from "@/lib/ai/generateJson";
 import { buildMockLegalResearchResult } from "@/lib/ai/mockWorkflows";
-import { MissingOpenAIKeyError } from "@/lib/ai/openai";
 import { legalResearchPrompt } from "@/lib/ai/prompts";
 import { LegalResearchAIResultSchema, LegalResearchResultSchema } from "@/lib/ai/schemas";
 import { retrieveAuthoritativeLegalSources } from "@/lib/legal/retrieveAuthoritativeLegalSources";
 import { saveLegalResearchResult } from "@/lib/legal/resultRepository";
 import { formatSourceContext } from "@/lib/legal/sourceContext";
+import { aiFallbackMessage, insufficientSourcesMessage } from "@/lib/legal/userMessages";
 import type { LegalResearchResult } from "@/types/legal";
 
 export const runtime = "nodejs";
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
         sources,
         nextSteps: ["补充更具体的事实、合同类型、争议阶段和关键词后重新检索。"],
         aiMode: "mock",
-        warning: "当前权威资料不足，未调用真实大模型。"
+        warning: insufficientSourcesMessage
       });
       const { databaseWarning } = await saveLegalResearchResult({
         question: payload.question,
@@ -78,8 +78,7 @@ export async function POST(request: Request) {
       console.error("[legal-research] ai fallback", summarizeError(error));
 
       const fallback = withAiFallbackWarning(
-        buildMockLegalResearchResult(payload.question, payload.legalArea),
-        error
+        buildMockLegalResearchResult(payload.question, payload.legalArea)
       );
       const { databaseWarning } = await saveLegalResearchResult({
         question: payload.question,
@@ -111,22 +110,11 @@ export async function POST(request: Request) {
   }
 }
 
-function withAiFallbackWarning(
-  result: LegalResearchResult,
-  error: unknown
-): LegalResearchResult {
-  if (error instanceof MissingOpenAIKeyError) {
-    return {
-      ...result,
-      aiMode: "mock",
-      warning: "当前未配置 OPENAI_API_KEY，返回 mock 示例结果。"
-    };
-  }
-
+function withAiFallbackWarning(result: LegalResearchResult): LegalResearchResult {
   return {
     ...result,
     aiMode: "mock",
-    warning: "当前真实 AI 调用失败，返回 mock 示例结果。请检查 OPENAI_API_KEY、OPENAI_MODEL 或网络连接。"
+    warning: aiFallbackMessage
   };
 }
 

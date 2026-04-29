@@ -149,5 +149,6 @@ export const LitigationAnalysisResultSchema = z.object({
   recommendedNextSteps: z.array(z.string()),
   disclaimer: z.string(),
   isMockFallback: z.boolean().optional(),
-  fallbackReason: z.string().optional()
+  fallbackReason: z.string().optional(),
+  databaseWarning: z.string().optional()
 });

@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { generateJson } from "@/lib/ai/generateJson";
 import { buildMockContractReviewResult } from "@/lib/ai/mockWorkflows";
-import { MissingOpenAIKeyError } from "@/lib/ai/openai";
 import { contractReviewPrompt } from "@/lib/ai/prompts";
 import { ContractReviewResultSchema } from "@/lib/ai/schemas";
 import { findContractById, saveContractReview } from "@/lib/contracts/contractRepository";
 import { retrieveAuthoritativeLegalSources } from "@/lib/legal/retrieveAuthoritativeLegalSources";
 import { formatSourceContext } from "@/lib/legal/sourceContext";
+import { aiFallbackMessage } from "@/lib/legal/userMessages";
 
 export const runtime = "nodejs";
 
@@ -57,9 +57,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({ ...result, databaseWarning });
     } catch (error) {
-      if (!(error instanceof MissingOpenAIKeyError)) {
-        throw error;
-      }
+      console.error("[contract-review] ai fallback", summarizeError(error));
 
       const fallback = buildMockContractReviewResult(contract.contractId, contract.rawText);
       const { databaseWarning } = await saveContractReview(
@@ -69,6 +67,7 @@ export async function POST(request: Request) {
       );
       const result = ContractReviewResultSchema.parse({
         ...fallback,
+        warning: aiFallbackMessage,
         sources,
         databaseWarning
       });
@@ -79,6 +78,14 @@ export async function POST(request: Request) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "请求参数无效。" }, { status: 400 });
     }
-    return NextResponse.json({ error: "合同审查失败，请稍后重试。" }, { status: 500 });
+    return NextResponse.json({ error: "合同审查失败，请检查输入后重试。" }, { status: 500 });
   }
+}
+
+function summarizeError(error: unknown) {
+  if (error instanceof Error) {
+    return { name: error.name, message: error.message };
+  }
+
+  return { name: "UnknownError", message: String(error) };
 }

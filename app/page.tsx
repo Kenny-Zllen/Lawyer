@@ -19,7 +19,7 @@ export default function DashboardPage() {
         <DashboardCard
           href="/legal-research"
           title="中国大陆法律检索辅助"
-          description="围绕大陆民商事问题检索 mock 权威来源，输出初步分析和下一步工作建议。"
+          description="围绕大陆民商事问题检索内置规则摘要库，输出初步分析和下一步工作建议。"
           icon={Search}
         />
         <DashboardCard
@@ -43,8 +43,8 @@ export default function DashboardPage() {
             <CardTitle>当前阶段范围</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm leading-6 text-muted-foreground">
-            <p>当前版本支持真实 AI 可选接入、API workflows、文档解析、诉讼分析和 mock fallback。</p>
-            <p>数据库或 AI 不可用时不会阻断核心流程，但结果会标记为 fallback 或未持久化。</p>
+            <p>当前 Beta 版本支持真实 AI 可选接入、API workflow、文档解析、诉讼分析和 Word 导出。</p>
+            <p>数据库或 AI 不可用时不会阻断核心流程，但结果会标记为系统 fallback 或未持久化。</p>
           </CardContent>
         </Card>
         <Card>
