@@ -17,7 +17,10 @@ export const contractReviewPrompt = `${sharedGuardrails}
 
 export const legalResearchPrompt = `${sharedGuardrails}
 任务：进行中国大陆权威法律检索辅助。
-请基于 question、legalArea 和 source context，输出符合 LegalResearchResultSchema 的 JSON。
+请基于 question、legalArea 和 source context，输出合法 JSON。
+JSON 只能包含这些字段：answer、nextSteps、warning。
+不要输出 sources、query、legalArea、aiMode 或 databaseWarning；这些字段由后端根据权威来源补充。
+nextSteps 必须是字符串数组。
 如果权威来源不足，不要强行分析，answer 必须为：“当前权威资料不足，无法基于现有资料给出可靠结论。”
 `;
 

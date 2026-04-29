@@ -50,6 +50,12 @@ export const LegalResearchResultSchema = z.object({
   databaseWarning: z.string().optional()
 });
 
+export const LegalResearchAIResultSchema = z.object({
+  answer: z.string(),
+  nextSteps: z.array(z.string()).default([]),
+  warning: z.string().optional()
+});
+
 export const DraftingResultSchema = z.object({
   title: z.string(),
   legalArea: LegalAreaSchema,

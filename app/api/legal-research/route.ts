@@ -4,7 +4,7 @@ import { generateJson } from "@/lib/ai/generateJson";
 import { buildMockLegalResearchResult } from "@/lib/ai/mockWorkflows";
 import { MissingOpenAIKeyError } from "@/lib/ai/openai";
 import { legalResearchPrompt } from "@/lib/ai/prompts";
-import { LegalResearchResultSchema } from "@/lib/ai/schemas";
+import { LegalResearchAIResultSchema, LegalResearchResultSchema } from "@/lib/ai/schemas";
 import { retrieveAuthoritativeLegalSources } from "@/lib/legal/retrieveAuthoritativeLegalSources";
 import { saveLegalResearchResult } from "@/lib/legal/resultRepository";
 import { formatSourceContext } from "@/lib/legal/sourceContext";
@@ -52,14 +52,18 @@ export async function POST(request: Request) {
           legalArea: payload.legalArea,
           jurisdiction: "中国大陆",
           sourceContext: formatSourceContext(sources),
-          requiredOutputShape: "LegalResearchResultSchema"
+          requiredOutputShape: {
+            answer: "string",
+            nextSteps: ["string"],
+            warning: "string | optional"
+          }
         }),
-        schema: LegalResearchResultSchema
+        schema: LegalResearchAIResultSchema
       });
       const result = LegalResearchResultSchema.parse({
         ...aiResult,
         query: payload.question,
-        legalArea: payload.legalArea ?? aiResult.legalArea,
+        legalArea: payload.legalArea ?? "其他",
         sources,
         aiMode: "real"
       });
