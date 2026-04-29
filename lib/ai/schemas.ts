@@ -63,6 +63,16 @@ export const ContractReviewResultSchema = z.object({
   databaseWarning: z.string().optional()
 });
 
+export const ContractReviewAIResultSchema = ContractReviewResultSchema.omit({
+  id: true,
+  sources: true,
+  aiMode: true,
+  warning: true,
+  databaseWarning: true
+}).extend({
+  id: z.string().optional()
+});
+
 export const LegalResearchResultSchema = z.object({
   query: z.string(),
   legalArea: LegalAreaSchema,
@@ -89,6 +99,15 @@ export const DraftingResultSchema = z.object({
   aiMode: z.enum(["real", "mock"]).optional(),
   warning: z.string().optional(),
   databaseWarning: z.string().optional()
+});
+
+export const DraftingAIResultSchema = DraftingResultSchema.omit({
+  sources: true,
+  aiMode: true,
+  warning: true,
+  databaseWarning: true
+}).extend({
+  legalArea: LegalAreaSchema.optional()
 });
 
 export const LitigationRequestSchema = z.object({
@@ -151,4 +170,13 @@ export const LitigationAnalysisResultSchema = z.object({
   isMockFallback: z.boolean().optional(),
   fallbackReason: z.string().optional(),
   databaseWarning: z.string().optional()
+});
+
+export const LitigationAnalysisAIResultSchema = LitigationAnalysisResultSchema.omit({
+  role: true,
+  caseType: true,
+  jurisdiction: true,
+  isMockFallback: true,
+  fallbackReason: true,
+  databaseWarning: true
 });

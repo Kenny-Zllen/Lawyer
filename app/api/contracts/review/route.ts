@@ -3,7 +3,7 @@ import { z } from "zod";
 import { generateJson } from "@/lib/ai/generateJson";
 import { buildMockContractReviewResult } from "@/lib/ai/mockWorkflows";
 import { contractReviewPrompt } from "@/lib/ai/prompts";
-import { ContractReviewResultSchema } from "@/lib/ai/schemas";
+import { ContractReviewAIResultSchema, ContractReviewResultSchema } from "@/lib/ai/schemas";
 import { findContractById, saveContractReview } from "@/lib/contracts/contractRepository";
 import { retrieveAuthoritativeLegalSources } from "@/lib/legal/retrieveAuthoritativeLegalSources";
 import { formatSourceContext } from "@/lib/legal/sourceContext";
@@ -58,9 +58,24 @@ export async function POST(request: Request) {
           reviewingParty: payload.reviewingParty ?? "未指定",
           contractText: contract.rawText,
           sourceContext,
-          requiredOutputShape: "ContractReviewResultSchema"
+          requiredOutputShape: {
+            title: "string",
+            legalArea: "合同 | 劳动 | 公司 | 争议解决 | 其他",
+            overallRisk: "低 | 中 | 高",
+            summary: "string",
+            keyClauses: ["string"],
+            keyIssues: [
+              {
+                title: "string",
+                riskLevel: "低 | 中 | 高",
+                explanation: "string",
+                suggestion: "string"
+              }
+            ],
+            suggestedClauses: ["string"]
+          }
         }),
-        schema: ContractReviewResultSchema
+        schema: ContractReviewAIResultSchema
       });
       const result = ContractReviewResultSchema.parse({
         ...aiResult,

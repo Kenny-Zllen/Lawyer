@@ -3,7 +3,11 @@ import { z } from "zod";
 import { generateJson } from "@/lib/ai/generateJson";
 import { MissingOpenAIKeyError } from "@/lib/ai/openai";
 import { litigationAnalysisPrompt } from "@/lib/ai/prompts";
-import { LitigationAnalysisResultSchema, LitigationRequestSchema } from "@/lib/ai/schemas";
+import {
+  LitigationAnalysisAIResultSchema,
+  LitigationAnalysisResultSchema,
+  LitigationRequestSchema
+} from "@/lib/ai/schemas";
 import { createMockLitigationAnalysis } from "@/lib/legal/mockLitigationAnalysis";
 import { retrieveAuthoritativeLegalSources } from "@/lib/legal/retrieveAuthoritativeLegalSources";
 import { saveLitigationAnalysisResult } from "@/lib/legal/resultRepository";
@@ -30,9 +34,34 @@ export async function POST(request: Request) {
         userPrompt: JSON.stringify({
           request: payload,
           sourceContext: formatSourceContext(sources),
-          requiredOutputShape: "LitigationAnalysisResultSchema"
+          requiredOutputShape: {
+            caseSummary: "string",
+            keyIssues: [{ issue: "string", explanation: "string", importance: "high | medium | low" }],
+            claimsOrDefenseSuggestions: ["string"],
+            legalBasis: [{ title: "string", articleNumber: "string | optional", sourceName: "string", relevance: "string" }],
+            evidenceAnalysis: {
+              existingEvidenceSummary: ["string"],
+              missingEvidence: [{ evidenceName: "string", purpose: "string", priority: "high | medium | low" }],
+              evidenceStrategy: ["string"]
+            },
+            opposingArgumentsAndResponses: [
+              {
+                possibleOpposingArgument: "string",
+                responseStrategy: "string",
+                neededEvidence: ["string"]
+              }
+            ],
+            draftDocuments: {
+              complaint: "string | optional",
+              answer: "string | optional",
+              representationStatement: "string | optional"
+            },
+            riskWarnings: ["string"],
+            recommendedNextSteps: ["string"],
+            disclaimer: "string"
+          }
         }),
-        schema: LitigationAnalysisResultSchema
+        schema: LitigationAnalysisAIResultSchema
       });
       const result = LitigationAnalysisResultSchema.parse({
         ...aiResult,

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { generateJson } from "@/lib/ai/generateJson";
 import { buildMockDraftingResult } from "@/lib/ai/mockWorkflows";
 import { legalDraftingPrompt } from "@/lib/ai/prompts";
-import { DraftingResultSchema } from "@/lib/ai/schemas";
+import { DraftingAIResultSchema, DraftingResultSchema } from "@/lib/ai/schemas";
 import { documentTemplates } from "@/lib/legal/documentTemplates";
 import { retrieveAuthoritativeLegalSources } from "@/lib/legal/retrieveAuthoritativeLegalSources";
 import { saveLegalDraftResult } from "@/lib/legal/resultRepository";
@@ -42,9 +42,14 @@ export async function POST(request: Request) {
           documentTemplate: template,
           jurisdiction: "中国大陆",
           sourceContext: formatSourceContext(sources),
-          requiredOutputShape: "DraftingResultSchema"
+          requiredOutputShape: {
+            title: "string",
+            legalArea: "合同 | 劳动 | 公司 | 争议解决 | 其他，可省略",
+            draftText: "string",
+            checklist: ["string"]
+          }
         }),
-        schema: DraftingResultSchema
+        schema: DraftingAIResultSchema
       });
       const result = DraftingResultSchema.parse({
         ...aiResult,

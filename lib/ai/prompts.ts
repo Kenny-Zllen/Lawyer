@@ -10,8 +10,9 @@ const sharedGuardrails = `
 
 export const contractReviewPrompt = `${sharedGuardrails}
 任务：审查中国大陆民商事合同。
-请基于合同文本、审查视角和 source context，输出符合 ContractReviewResultSchema 的 JSON。
-必须包含合同摘要 summary、风险等级 overallRisk、关键条款 keyClauses、关键问题 keyIssues、法律依据 sources、修改建议 suggestedClauses。
+请基于合同文本、审查视角和 source context，输出符合 requiredOutputShape 的 JSON。
+必须包含合同摘要 summary、风险等级 overallRisk、关键条款 keyClauses、关键问题 keyIssues、修改建议 suggestedClauses。
+不要输出 sources、aiMode、warning 或 databaseWarning；法律依据由后端根据 source context 补充。
 不要引用 source context 中不存在的条文、机构、案例或事实。
 `;
 
@@ -28,7 +29,8 @@ nextSteps 必须是字符串数组。
 
 export const legalDraftingPrompt = `${sharedGuardrails}
 任务：生成中国大陆民商事法律文书草稿。
-请基于 DraftingRequest、document template 和 source context，输出符合 DraftingResultSchema 的 JSON。
+请基于 DraftingRequest、document template 和 source context，输出符合 requiredOutputShape 的 JSON。
+不要输出 sources、aiMode、warning 或 databaseWarning；法律依据由后端根据 source context 补充。
 文书草稿不得虚构用户未提供的主体、金额、日期、事实或法律依据。
 如果资料不足，应在 draftText 或 checklist 中提示需补充的信息。
 `;
@@ -62,8 +64,9 @@ export const litigationAnalysisPrompt = `${sharedGuardrails}
 13. 第三人可以生成参加诉讼意见或代理意见草稿，不强制生成起诉状或答辩状。
 14. 必须预判对方可能提出的主要抗辩意见，并提出应对策略。
 15. 必须指出还需要补充哪些关键证据。
-16. 输出必须是合法 JSON，符合 LitigationAnalysisResultSchema。
+16. 输出必须是合法 JSON，符合 requiredOutputShape。
 17. 不要输出 Markdown。
 18. 输出不构成正式法律意见，应由合资格律师审核。
 19. 所有文书草稿必须提示“需根据具体法院、当事人身份信息和证据材料进一步完善”。
+20. 不要输出 role、caseType、jurisdiction、isMockFallback、fallbackReason 或 databaseWarning；这些字段由后端补充。
 `;
