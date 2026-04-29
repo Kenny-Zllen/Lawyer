@@ -60,7 +60,7 @@ export default function LegalResearchPage() {
   return (
     <AppShell
       title="中国大陆法律检索辅助"
-      description="通过 mock API 检索本地权威来源，形成初步分析、依据列表和下一步建议。"
+      description="通过 API 检索本地权威来源，形成初步分析、依据列表和下一步建议。"
     >
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_420px]">
         <section className="space-y-5">
@@ -90,7 +90,7 @@ export default function LegalResearchPage() {
                 placeholder="请输入要检索的中国大陆法律问题"
               />
               <Button onClick={research} disabled={isLoading}>
-                通过 API 检索 mock 权威来源
+                通过 API 检索权威来源
               </Button>
             </CardContent>
           </Card>
@@ -134,7 +134,7 @@ export default function LegalResearchPage() {
           )}
         </section>
         <aside className="space-y-4">
-          <h2 className="text-lg font-semibold">命中的 mock 权威来源</h2>
+          <h2 className="text-lg font-semibold">命中的权威来源</h2>
           {result ? (
             result.sources.map((source) => <LegalSourceCard key={source.id} source={source} />)
           ) : (

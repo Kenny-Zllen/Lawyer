@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       5
     );
 
-    if (sources.length < 2) {
+    if (sources.length === 0) {
       const insufficientResult = LegalResearchResultSchema.parse({
         query: payload.question,
         legalArea: payload.legalArea ?? "其他",
