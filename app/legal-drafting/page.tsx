@@ -92,7 +92,7 @@ export default function LegalDraftingPage() {
                     updateRequest("templateId", event.target.value);
                     setResult(null);
                   }}
-                  className="mt-2 h-10 w-full rounded-md border border-border bg-card px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/15"
+                  className="mt-2 h-10 w-full rounded-md border border-border bg-white px-3 text-sm outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/15"
                 >
                   {documentTemplates.map((template) => (
                     <option key={template.id} value={template.id}>
@@ -169,7 +169,7 @@ export default function LegalDraftingPage() {
                     {normalizeDatabaseWarning(result.databaseWarning)}
                   </p>
                 )}
-                <pre className="whitespace-pre-wrap rounded-md border border-border bg-muted p-4 text-sm leading-7">
+                <pre className="whitespace-pre-wrap rounded-md border border-border/80 bg-white/70 p-4 text-sm leading-7 shadow-sm">
                   {result.draftText}
                 </pre>
                 <div className="text-sm leading-6">

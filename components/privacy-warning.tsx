@@ -5,8 +5,10 @@ export const PRIVACY_WARNING =
 
 export function PrivacyWarning() {
   return (
-    <div className="flex gap-3 rounded-md border border-border bg-muted p-4 text-sm text-muted-foreground">
-      <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+    <div className="flex gap-3 rounded-md border border-border/80 bg-muted/70 p-4 text-sm text-muted-foreground">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-white text-primary shadow-sm">
+        <ShieldAlert className="h-4 w-4" aria-hidden="true" />
+      </div>
       <p className="leading-6">{PRIVACY_WARNING}</p>
     </div>
   );

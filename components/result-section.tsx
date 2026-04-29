@@ -12,11 +12,11 @@ export function ResultSection({
 }) {
   return (
     <Card>
-      <CardHeader className="flex flex-row items-start justify-between gap-4">
-        <CardTitle>{title}</CardTitle>
+      <CardHeader className="flex flex-row items-start justify-between gap-4 border-b border-border/70">
+        <CardTitle className="text-lg">{title}</CardTitle>
         {action}
       </CardHeader>
-      <CardContent>{children}</CardContent>
+      <CardContent className="pt-5">{children}</CardContent>
     </Card>
   );
 }

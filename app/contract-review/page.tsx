@@ -138,7 +138,7 @@ export default function ContractReviewPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <PrivacyWarning />
-              <label className="flex min-h-28 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-border bg-muted text-center text-sm text-muted-foreground transition hover:border-primary/60">
+              <label className="flex min-h-28 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-border/90 bg-white/65 text-center text-sm text-muted-foreground transition hover:border-primary/60 hover:bg-white">
                 <Upload className="mb-2 h-5 w-5" aria-hidden="true" />
                 <span>上传合同文件，支持 TXT / DOCX / PDF，最大 10MB</span>
                 <input
@@ -244,7 +244,7 @@ export default function ContractReviewPage() {
                 </div>
                 <div className="space-y-3">
                   {result.keyIssues.map((issue) => (
-                    <div key={issue.title} className="rounded-md border border-border p-4">
+                    <div key={issue.title} className="rounded-md border border-border/80 bg-white/60 p-4 shadow-sm">
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <h3 className="font-semibold">{issue.title}</h3>
                         <RiskBadge level={issue.riskLevel} />

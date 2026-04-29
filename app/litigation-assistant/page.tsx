@@ -124,7 +124,7 @@ export default function LitigationAssistantPage() {
                   <select
                     value={request.role}
                     onChange={(event) => updateRequest("role", event.target.value as LitigationRole)}
-                    className="mt-2 h-10 w-full rounded-md border border-border bg-card px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/15"
+                    className="mt-2 h-10 w-full rounded-md border border-border bg-white px-3 text-sm outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/15"
                   >
                     {roles.map((role) => (
                       <option key={role} value={role}>
@@ -138,7 +138,7 @@ export default function LitigationAssistantPage() {
                   <select
                     value={request.caseType}
                     onChange={(event) => updateRequest("caseType", event.target.value as LitigationCaseType)}
-                    className="mt-2 h-10 w-full rounded-md border border-border bg-card px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/15"
+                    className="mt-2 h-10 w-full rounded-md border border-border bg-white px-3 text-sm outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/15"
                   >
                     {caseTypes.map((caseType) => (
                       <option key={caseType} value={caseType}>
@@ -261,7 +261,7 @@ function LitigationResult({
       <ResultSection title="争议焦点">
         <div className="grid gap-3 md:grid-cols-2">
           {result.keyIssues.map((issue) => (
-            <div key={issue.issue} className="rounded-md border border-border p-4 text-sm">
+            <div key={issue.issue} className="rounded-md border border-border/80 bg-white/60 p-4 text-sm shadow-sm">
               <div className="flex items-start justify-between gap-3">
                 <h3 className="font-semibold">{issue.issue}</h3>
                 <PriorityBadge value={issue.importance} />
@@ -279,7 +279,7 @@ function LitigationResult({
       <ResultSection title="法律依据">
         <div className="space-y-3">
           {result.legalBasis.map((basis) => (
-            <div key={`${basis.sourceName}-${basis.title}-${basis.articleNumber ?? ""}`} className="rounded-md border border-border p-4 text-sm">
+            <div key={`${basis.sourceName}-${basis.title}-${basis.articleNumber ?? ""}`} className="rounded-md border border-border/80 bg-white/60 p-4 text-sm shadow-sm">
               <h3 className="font-semibold">{basis.title}</h3>
               <p className="mt-1 text-muted-foreground">{basis.sourceName}{basis.articleNumber ? ` · ${basis.articleNumber}` : ""}</p>
               <p className="mt-2 leading-6">{basis.relevance}</p>
@@ -400,7 +400,7 @@ function DocumentBlock({ title, text }: { title: string; text?: string }) {
         <h3 className="font-semibold">{title}</h3>
         <CopyButton text={text} />
       </div>
-      <pre className="whitespace-pre-wrap p-4 text-sm leading-7">{text}</pre>
+      <pre className="whitespace-pre-wrap bg-white/60 p-4 text-sm leading-7">{text}</pre>
     </div>
   );
 }

@@ -4,18 +4,21 @@ import { cn } from "@/lib/utils";
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("rounded-md border border-border bg-card text-card-foreground shadow-sm", className)}
+      className={cn(
+        "rounded-md border border-border/90 bg-card text-card-foreground shadow-[0_1px_2px_rgba(18,32,29,0.05),0_10px_28px_rgba(18,32,29,0.04)]",
+        className
+      )}
       {...props}
     />
   );
 }
 
 export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("space-y-1.5 p-5", className)} {...props} />;
+  return <div className={cn("space-y-1.5 p-5 pb-4", className)} {...props} />;
 }
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn("text-lg font-semibold", className)} {...props} />;
+  return <h3 className={cn("text-base font-semibold tracking-normal text-foreground", className)} {...props} />;
 }
 
 export function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {

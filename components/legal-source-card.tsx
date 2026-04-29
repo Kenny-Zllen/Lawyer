@@ -20,7 +20,7 @@ const reliabilityLabels: Record<AuthoritativeLegalSource["reliabilityLevel"], st
 
 export function LegalSourceCard({ source }: { source: AuthoritativeLegalSource }) {
   return (
-    <Card className="h-full">
+    <Card className="h-full overflow-hidden">
       <CardHeader>
         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           <span>{sourceTypeLabels[source.sourceType]}</span>
@@ -31,14 +31,14 @@ export function LegalSourceCard({ source }: { source: AuthoritativeLegalSource }
           <span>·</span>
           <span>可靠性：{reliabilityLabels[source.reliabilityLevel]}</span>
         </div>
-        <CardTitle className="text-base">{source.title}</CardTitle>
+        <CardTitle className="text-base leading-6">{source.title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 text-sm">
         <p className="text-xs text-muted-foreground">{source.sourceName}{source.articleNumber ? ` · ${source.articleNumber}` : ""}</p>
         <p className="leading-6 text-muted-foreground">{source.content}</p>
         <div className="flex flex-wrap gap-2">
           {[...source.legalArea, ...source.scenarioTags].slice(0, 8).map((tag) => (
-            <span key={tag} className="rounded-full bg-muted px-2.5 py-1 text-xs">
+            <span key={tag} className="rounded-full border border-border/70 bg-muted/70 px-2.5 py-1 text-xs text-muted-foreground">
               {tag}
             </span>
           ))}

@@ -1,18 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f7f5;
-  --foreground: #1e2428;
-  --muted: #eef0ed;
-  --muted-foreground: #626b72;
-  --card: #ffffff;
-  --card-foreground: #1e2428;
-  --border: #d8ddd6;
-  --primary: #1f4b45;
+  --background: #f4f5f2;
+  --foreground: #17201f;
+  --muted: #eef1ed;
+  --muted-foreground: #5d6865;
+  --card: #fbfcfa;
+  --card-foreground: #17201f;
+  --border: #d7ddd4;
+  --primary: #17443f;
   --primary-foreground: #ffffff;
-  --accent: #b58b3b;
+  --accent: #a67c2c;
   --accent-foreground: #1e2428;
   --destructive: #b42318;
+  --surface: #ffffff;
+  --sidebar: #f9faf8;
+  --ring: rgba(23, 68, 63, 0.16);
 }
 
 @theme inline {
@@ -36,9 +39,13 @@
 
 body {
   margin: 0;
-  background: var(--background);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(244, 245, 242, 0.92) 280px),
+    var(--background);
   color: var(--foreground);
   font-family: Arial, "Microsoft YaHei", "PingFang SC", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 button,
@@ -46,6 +53,21 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+input,
+textarea,
+select {
+  color: var(--foreground);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #8a928e;
+}
+
+pre {
+  font-family: Arial, "Microsoft YaHei", "PingFang SC", sans-serif;
 }
 
 ::selection {

@@ -6,8 +6,10 @@ export const LEGAL_DISCLAIMER =
 
 export function DisclaimerBanner() {
   return (
-    <div className="flex gap-3 rounded-md border border-[#d7c08d] bg-[#fff8e6] p-4 text-sm text-[#5c4618]">
-      <Scale className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+    <div className="flex gap-3 rounded-md border border-[#d8c18f] bg-[#fffaf0] p-4 text-sm text-[#594318] shadow-[0_1px_2px_rgba(89,67,24,0.04)]">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#f5ead1] text-[#735315]">
+        <Scale className="h-4 w-4" aria-hidden="true" />
+      </div>
       <div>
         <p className="font-semibold">大陆法域限定与免责声明</p>
         <p className="mt-1 leading-6">

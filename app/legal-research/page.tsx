@@ -81,7 +81,7 @@ export default function LegalResearchPage() {
                 <select
                   value={legalArea}
                   onChange={(event) => setLegalArea(event.target.value as LegalArea)}
-                  className="mt-2 h-10 w-full rounded-md border border-border bg-card px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/15"
+                  className="mt-2 h-10 w-full rounded-md border border-border bg-white px-3 text-sm outline-none transition focus:border-primary/70 focus:ring-2 focus:ring-primary/15"
                 >
                   {legalAreas.map((area) => (
                     <option key={area} value={area}>
