@@ -1,0 +1,36 @@
+[
+  {
+    "id": "labor-contract-termination-compensation",
+    "title": "劳动合同解除与经济补偿规则摘要",
+    "sourceType": "law",
+    "issuingAuthority": "全国人民代表大会常务委员会",
+    "sourceName": "中华人民共和国劳动合同法",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2008-01-01",
+    "articleNumber": "劳动合同解除、终止和经济补偿相关规则",
+    "content": "规则摘要：劳动争议中应重点核查劳动关系、合同签订、工资支付、社保、解除事由、解除程序、经济补偿或赔偿金等事实和证据。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "劳动",
+      "争议解决"
+    ],
+    "keywords": [
+      "劳动",
+      "劳动合同",
+      "工资",
+      "社保",
+      "解除",
+      "终止",
+      "经济补偿",
+      "赔偿金",
+      "加班"
+    ],
+    "scenarioTags": [
+      "劳动争议",
+      "解除劳动合同",
+      "经济补偿",
+      "仲裁"
+    ]
+  }
+]

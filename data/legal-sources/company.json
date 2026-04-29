@@ -1,0 +1,37 @@
+[
+  {
+    "id": "company-law-shareholder-dispute",
+    "title": "公司治理与股东权利规则摘要",
+    "sourceType": "law",
+    "issuingAuthority": "全国人民代表大会常务委员会",
+    "sourceName": "中华人民共和国公司法",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2024-07-01",
+    "articleNumber": "股东权利、出资、董监高责任相关规则",
+    "content": "规则摘要：公司纠纷中常见争议包括出资责任、股东知情权、股权转让、公司决议效力、董监高责任等。应结合章程、出资凭证、股东会决议和工商登记材料分析。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "公司",
+      "民商事"
+    ],
+    "keywords": [
+      "公司",
+      "股东",
+      "股权",
+      "出资",
+      "章程",
+      "董事",
+      "监事",
+      "高管",
+      "股权转让",
+      "知情权"
+    ],
+    "scenarioTags": [
+      "公司纠纷",
+      "股东争议",
+      "股权转让",
+      "公司治理"
+    ]
+  }
+]

@@ -1,6 +1,6 @@
 import type { AuthoritativeLegalSource } from "@/types/legal";
 
-export const mainlandChinaLegalSources: AuthoritativeLegalSource[] = [
+export const fallbackHardcodedLegalSources: AuthoritativeLegalSource[] = [
   {
     id: "civil-code-contract-general-performance",
     title: "合同履行与诚信原则规则摘要",
@@ -254,3 +254,5 @@ export const mainlandChinaLegalSources: AuthoritativeLegalSource[] = [
     scenarioTags: ["隐私合规", "材料脱敏", "数据保护"]
   }
 ];
+
+export const mainlandChinaLegalSources = fallbackHardcodedLegalSources;

@@ -1,0 +1,34 @@
+[
+  {
+    "id": "civil-code-tort-liability",
+    "title": "侵权责任基础规则摘要",
+    "sourceType": "law",
+    "issuingAuthority": "全国人民代表大会",
+    "sourceName": "中华人民共和国民法典 侵权责任编",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2021-01-01",
+    "articleNumber": "侵权责任编相关规则",
+    "content": "规则摘要：侵权责任案件通常围绕侵权行为、过错、损害后果、因果关系和责任承担方式展开。证据应覆盖损害事实、费用支出、行为与损害之间的关联。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "侵权",
+      "民商事",
+      "争议解决"
+    ],
+    "keywords": [
+      "侵权",
+      "损害",
+      "过错",
+      "因果关系",
+      "赔偿",
+      "医疗费",
+      "财产损失"
+    ],
+    "scenarioTags": [
+      "侵权责任纠纷",
+      "损害赔偿",
+      "证据缺口"
+    ]
+  }
+]

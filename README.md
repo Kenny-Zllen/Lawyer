@@ -112,7 +112,7 @@ npm run build:webpack
 
 ## 权威来源与检索
 
-当前 `lib/legal/mainlandChinaLegalSources.ts` 是本地中国大陆民商事规则摘要库，不是完整法规库。每条来源包含：
+当前法律来源优先从 `data/legal-sources/*.json` 加载。`lib/legal/mainlandChinaLegalSources.ts` 保留为硬编码 fallback。内置数据是中国大陆民商事规则摘要库，不是完整法规库。每条来源包含：
 
 - `sourceType`：法律、司法解释、证据规则、程序规则等
 - `issuingAuthority`、`sourceName`、`effectiveDate`、`articleNumber`
@@ -121,6 +121,27 @@ npm run build:webpack
 - `legalArea`、`keywords`、`scenarioTags`
 
 检索逻辑会综合关键词、来源名称、标题、规则摘要、法律领域、场景标签和可靠性评分。AI 只能基于检索到的 source context 输出；如果没有相关来源，应明确说明资料不足。
+
+## 法律知识库维护与 RAG 预留
+
+新增或编辑来源请参考 `docs/legal-source-authoring.md`。测试样例见 `docs/test-cases.md`。
+
+当前检索链路：
+
+- `loadLegalSources()`：读取并校验 `data/legal-sources/*.json`
+- `legalSourceSchema.ts`：使用 Zod 校验来源结构
+- `keywordRetriever`：当前实际使用的关键词和 scoring 检索
+- `vectorRetriever`：stub，后续接 pgvector / embeddings
+- `hybridRetriever`：当前调用 keyword retriever，未来合并 keyword + vector
+
+后续计划：
+
+- pgvector
+- embeddings
+- 法条全文导入
+- 案例摘要导入
+- 引用 URL 校验
+- 法条版本管理
 
 ## 当前限制
 

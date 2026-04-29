@@ -1,0 +1,37 @@
+[
+  {
+    "id": "civil-code-sales-contract",
+    "title": "买卖合同交付、验收与价款规则摘要",
+    "sourceType": "law",
+    "issuingAuthority": "全国人民代表大会",
+    "sourceName": "中华人民共和国民法典 合同编",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2021-01-01",
+    "articleNumber": "买卖合同相关规则",
+    "content": "规则摘要：买卖合同纠纷常围绕标的物交付、质量瑕疵、验收、价款支付、逾期付款和违约责任展开。证据应关注订单、发货记录、签收验收、发票和对账材料。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "合同",
+      "买卖",
+      "争议解决"
+    ],
+    "keywords": [
+      "买卖",
+      "买卖合同",
+      "货款",
+      "交付",
+      "验收",
+      "质量",
+      "发票",
+      "对账单",
+      "逾期付款"
+    ],
+    "scenarioTags": [
+      "买卖合同纠纷",
+      "货款催收",
+      "质量争议",
+      "交付验收"
+    ]
+  }
+]

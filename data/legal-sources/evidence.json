@@ -1,0 +1,71 @@
+[
+  {
+    "id": "civil-procedure-evidence-burden",
+    "title": "民事诉讼证据与举证责任规则摘要",
+    "sourceType": "procedural_rule",
+    "issuingAuthority": "全国人民代表大会常务委员会",
+    "sourceName": "中华人民共和国民事诉讼法",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2024-01-01",
+    "articleNumber": "证据相关规则",
+    "content": "规则摘要：当事人对自己提出的主张有责任提供证据。证据包括书证、物证、视听资料、电子数据、证人证言等。案件分析应将事实主张、证明对象和证据材料逐项对应。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "争议解决",
+      "民事诉讼"
+    ],
+    "keywords": [
+      "证据",
+      "举证责任",
+      "证明责任",
+      "电子数据",
+      "书证",
+      "聊天记录",
+      "微信",
+      "转账记录",
+      "发票",
+      "验收单"
+    ],
+    "scenarioTags": [
+      "证据清单",
+      "证据缺口",
+      "举证策略",
+      "质证"
+    ]
+  },
+  {
+    "id": "civil-evidence-electronic-data",
+    "title": "民事诉讼电子数据证据规则摘要",
+    "sourceType": "evidence_rule",
+    "issuingAuthority": "最高人民法院",
+    "sourceName": "最高人民法院关于民事诉讼证据的若干规定",
+    "effectiveDate": "2020-05-01",
+    "articleNumber": "电子数据、证据审查相关规则",
+    "content": "规则摘要：电子数据可以作为民事诉讼证据类型之一。微信聊天记录、电子邮件、电子合同、转账记录等材料应关注原始载体、形成过程、完整性、真实性、关联性和证明目的。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "high",
+    "legalArea": [
+      "争议解决",
+      "证据"
+    ],
+    "keywords": [
+      "证据",
+      "电子数据",
+      "微信",
+      "聊天记录",
+      "邮件",
+      "转账记录",
+      "原始载体",
+      "真实性",
+      "关联性",
+      "合法性"
+    ],
+    "scenarioTags": [
+      "电子证据",
+      "证据补强",
+      "质证意见",
+      "诉讼证据"
+    ]
+  }
+]

@@ -1,0 +1,36 @@
+[
+  {
+    "id": "private-lending-proof-interest",
+    "title": "民间借贷借贷事实与利息规则摘要",
+    "sourceType": "judicial_interpretation",
+    "issuingAuthority": "最高人民法院",
+    "sourceName": "最高人民法院关于审理民间借贷案件适用法律若干问题的规定",
+    "effectiveDate": "2021-01-01",
+    "articleNumber": "借贷事实、利率保护相关规则",
+    "content": "规则摘要：民间借贷案件通常围绕借贷合意、款项交付、还款情况、利息约定和担保责任展开。转账凭证、借条、聊天记录、还款记录等材料对证明借贷事实具有重要意义。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "high",
+    "legalArea": [
+      "民间借贷",
+      "合同",
+      "争议解决"
+    ],
+    "keywords": [
+      "借贷",
+      "民间借贷",
+      "借款",
+      "本金",
+      "利息",
+      "还款",
+      "转账记录",
+      "借条",
+      "担保"
+    ],
+    "scenarioTags": [
+      "民间借贷纠纷",
+      "借贷事实",
+      "利息",
+      "还款抗辩"
+    ]
+  }
+]

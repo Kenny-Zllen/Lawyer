@@ -1,0 +1,33 @@
+[
+  {
+    "id": "personal-information-protection-basic",
+    "title": "个人信息处理合规规则摘要",
+    "sourceType": "law",
+    "issuingAuthority": "全国人民代表大会常务委员会",
+    "sourceName": "中华人民共和国个人信息保护法",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2021-11-01",
+    "articleNumber": "个人信息处理基础规则",
+    "content": "规则摘要：处理个人信息应具备合法性基础，遵循合法、正当、必要和诚信原则。合同审查和诉讼材料处理时应注意敏感个人信息、最小必要、授权同意和数据安全。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "数据合规",
+      "其他"
+    ],
+    "keywords": [
+      "个人信息",
+      "隐私",
+      "数据",
+      "敏感个人信息",
+      "授权",
+      "同意",
+      "最小必要"
+    ],
+    "scenarioTags": [
+      "隐私合规",
+      "材料脱敏",
+      "数据保护"
+    ]
+  }
+]

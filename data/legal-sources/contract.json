@@ -1,0 +1,167 @@
+[
+  {
+    "id": "civil-code-contract-general-performance",
+    "title": "合同履行与诚信原则规则摘要",
+    "sourceType": "law",
+    "issuingAuthority": "全国人民代表大会",
+    "sourceName": "中华人民共和国民法典 合同编",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2021-01-01",
+    "articleNumber": "第五百零九条等",
+    "content": "规则摘要：合同当事人应按照约定全面履行义务，并遵循诚信原则，根据合同性质、目的和交易习惯履行通知、协助、保密等义务。适用于服务合同、买卖合同、租赁合同等履行争议的基础分析。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "合同",
+      "民商事"
+    ],
+    "keywords": [
+      "合同",
+      "履行",
+      "全面履行",
+      "诚信原则",
+      "通知义务",
+      "协助义务",
+      "服务合同",
+      "买卖合同",
+      "租赁"
+    ],
+    "scenarioTags": [
+      "合同履行",
+      "服务交付",
+      "交易习惯",
+      "义务边界"
+    ]
+  },
+  {
+    "id": "civil-code-contract-breach-damages",
+    "title": "违约责任、继续履行与损害赔偿规则摘要",
+    "sourceType": "law",
+    "issuingAuthority": "全国人民代表大会",
+    "sourceName": "中华人民共和国民法典 合同编",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2021-01-01",
+    "articleNumber": "第五百七十七条、第五百八十四条等",
+    "content": "规则摘要：一方不履行合同义务或履行不符合约定的，应承担继续履行、采取补救措施或赔偿损失等违约责任。损失赔偿通常围绕违约造成的损失、合同履行后可获得利益及可预见性边界展开。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "合同",
+      "争议解决"
+    ],
+    "keywords": [
+      "违约",
+      "违约责任",
+      "损害赔偿",
+      "损失",
+      "继续履行",
+      "补救措施",
+      "逾期",
+      "交付",
+      "验收"
+    ],
+    "scenarioTags": [
+      "逾期交付",
+      "履行瑕疵",
+      "赔偿损失",
+      "合同审查",
+      "诉讼请求"
+    ]
+  },
+  {
+    "id": "civil-code-contract-liquidated-damages",
+    "title": "违约金调整规则摘要",
+    "sourceType": "law",
+    "issuingAuthority": "全国人民代表大会",
+    "sourceName": "中华人民共和国民法典 合同编",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2021-01-01",
+    "articleNumber": "第五百八十五条",
+    "content": "规则摘要：当事人可以约定一方违约时根据违约情况支付一定数额违约金，也可以约定损失赔偿额的计算方法。约定违约金过分高于或低于造成损失的，可能涉及司法调整。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "合同",
+      "争议解决"
+    ],
+    "keywords": [
+      "违约金",
+      "违约",
+      "调减",
+      "调高",
+      "损失",
+      "赔偿额",
+      "逾期付款",
+      "逾期交付"
+    ],
+    "scenarioTags": [
+      "违约金主张",
+      "违约金抗辩",
+      "损失证明",
+      "诉讼策略"
+    ]
+  },
+  {
+    "id": "civil-code-contract-termination",
+    "title": "合同解除与终止规则摘要",
+    "sourceType": "law",
+    "issuingAuthority": "全国人民代表大会",
+    "sourceName": "中华人民共和国民法典 合同编",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2021-01-01",
+    "articleNumber": "第五百六十三条等",
+    "content": "规则摘要：在约定或法定解除事由出现时，当事人可以主张解除合同。解除争议通常需要核查违约程度、催告、履行期限、合同目的能否实现及解除通知等事实。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "合同"
+    ],
+    "keywords": [
+      "解除",
+      "终止",
+      "合同目的",
+      "催告",
+      "履行期限",
+      "根本违约",
+      "通知"
+    ],
+    "scenarioTags": [
+      "合同解除",
+      "催告函",
+      "合同目的落空",
+      "风险审查"
+    ]
+  },
+  {
+    "id": "supreme-court-contract-interpretation-general",
+    "title": "民法典合同编通则司法解释规则摘要",
+    "sourceType": "judicial_interpretation",
+    "issuingAuthority": "最高人民法院",
+    "sourceName": "最高人民法院关于适用《中华人民共和国民法典》合同编通则若干问题的解释",
+    "effectiveDate": "2023-12-05",
+    "articleNumber": "合同解释、违约责任等相关规则",
+    "content": "规则摘要：对民法典合同编通则适用中的合同解释、预约合同、履行抗辩、债权保全、违约责任等问题作出细化，适合在合同争议、合同审查和诉讼策略中辅助定位裁判思路。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "high",
+    "legalArea": [
+      "合同",
+      "争议解决"
+    ],
+    "keywords": [
+      "合同编通则",
+      "合同解释",
+      "预约合同",
+      "履行抗辩",
+      "违约责任",
+      "违约金",
+      "债权人代位权",
+      "逾期"
+    ],
+    "scenarioTags": [
+      "合同解释",
+      "履行抗辩",
+      "违约责任",
+      "诉讼分析"
+    ]
+  }
+]

@@ -1,0 +1,36 @@
+[
+  {
+    "id": "civil-procedure-filing-jurisdiction",
+    "title": "民事起诉条件与管辖规则摘要",
+    "sourceType": "procedural_rule",
+    "issuingAuthority": "全国人民代表大会常务委员会",
+    "sourceName": "中华人民共和国民事诉讼法",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2024-01-01",
+    "articleNumber": "起诉条件、管辖相关规则",
+    "content": "规则摘要：民事案件起诉通常需要明确原被告、具体诉讼请求、事实和理由，并属于人民法院受理民事诉讼范围和受诉法院管辖。诉讼前应核查地域管辖、协议管辖、专属管辖和仲裁条款。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "争议解决",
+      "民事诉讼"
+    ],
+    "keywords": [
+      "诉讼",
+      "民事诉讼",
+      "起诉",
+      "起诉状",
+      "管辖",
+      "协议管辖",
+      "仲裁条款",
+      "原告",
+      "被告"
+    ],
+    "scenarioTags": [
+      "起诉条件",
+      "管辖审查",
+      "诉讼文书",
+      "案件分析"
+    ]
+  }
+]

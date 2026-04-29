@@ -1,0 +1,36 @@
+[
+  {
+    "id": "civil-code-lease-contract",
+    "title": "房屋租赁合同基础规则摘要",
+    "sourceType": "law",
+    "issuingAuthority": "全国人民代表大会",
+    "sourceName": "中华人民共和国民法典 合同编",
+    "url": "https://flk.npc.gov.cn/",
+    "effectiveDate": "2021-01-01",
+    "articleNumber": "租赁合同相关规则",
+    "content": "规则摘要：房屋租赁纠纷常围绕租金支付、押金返还、房屋交付、维修义务、提前解除、转租和违约责任展开。应核查租赁合同、付款凭证、交接记录和沟通记录。",
+    "jurisdiction": "中国大陆",
+    "reliabilityLevel": "official",
+    "legalArea": [
+      "合同",
+      "租赁",
+      "争议解决"
+    ],
+    "keywords": [
+      "租赁",
+      "房屋租赁",
+      "租金",
+      "押金",
+      "维修",
+      "转租",
+      "提前解除",
+      "房屋交付"
+    ],
+    "scenarioTags": [
+      "房屋租赁纠纷",
+      "押金返还",
+      "租金争议",
+      "解除合同"
+    ]
+  }
+]
