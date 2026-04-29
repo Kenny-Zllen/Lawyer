@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getOpenAIClient, getOpenAIModel } from "./openai";
+import { getOpenAIClient, getOpenAIModel, MissingOpenAIKeyError } from "./openai";
 
 export class AIJsonGenerationError extends Error {
   constructor(message = "大模型未返回可校验的 JSON 结果，请稍后重试。") {
@@ -45,6 +45,10 @@ export async function generateJson<T>({
 
       return schema.parse(parseJsonContent(content));
     } catch (error) {
+      if (error instanceof MissingOpenAIKeyError) {
+        throw error;
+      }
+
       lastError = error;
     }
   }

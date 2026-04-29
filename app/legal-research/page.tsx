@@ -101,7 +101,12 @@ export default function LegalResearchPage() {
               <div className="space-y-4 text-sm leading-6">
                 {result.warning?.includes("OPENAI_API_KEY") && (
                   <p className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-[#5c4618]">
-                    当前未配置 AI API Key，无法调用真实大模型。
+                    当前 AI API Key 缺失或无效，请检查 OPENAI_API_KEY。
+                  </p>
+                )}
+                {result.warning && !result.warning.includes("OPENAI_API_KEY") && (
+                  <p className="rounded-md border border-[#d7c08d] bg-[#fff8e6] p-3 text-[#5c4618]">
+                    {result.warning}
                   </p>
                 )}
                 {result.aiMode === "mock" && (
