@@ -2,9 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { generateJson } from "@/lib/ai/generateJson";
 import { MissingOpenAIKeyError } from "@/lib/ai/openai";
-import { litigationAnalysisPrompt } from "@/lib/ai/prompts";
 import {
-  LitigationAnalysisAIResultSchema,
   LitigationAnalysisResultSchema,
   LitigationRequestSchema
 } from "@/lib/ai/schemas";
@@ -16,6 +14,50 @@ import { aiFallbackMessage } from "@/lib/legal/userMessages";
 import type { LitigationAnalysisResult } from "@/types/legal";
 
 export const runtime = "nodejs";
+
+const CompactLitigationAIResultSchema = z.object({
+  caseSummary: z.string().catch("已根据用户提交材料生成初步案情摘要，需由律师结合完整证据核验。"),
+  keyIssues: z
+    .array(
+      z.object({
+        issue: z.string().catch("争议焦点"),
+        explanation: z.string().catch("需结合用户事实和权威来源进一步核验。"),
+        importance: z.enum(["high", "medium", "low"]).catch("medium")
+      })
+    )
+    .catch([]),
+  claimsOrDefenseSuggestions: z.array(z.string()).catch([]),
+  evidenceAnalysis: z
+    .object({
+      existingEvidenceSummary: z.array(z.string()).catch([]),
+      missingEvidence: z
+        .array(
+          z.object({
+            evidenceName: z.string().catch("补充证据"),
+            purpose: z.string().catch("用于补强相关事实的证明链条。"),
+            priority: z.enum(["high", "medium", "low"]).catch("medium")
+          })
+        )
+        .catch([]),
+      evidenceStrategy: z.array(z.string()).catch([])
+    })
+    .catch({
+      existingEvidenceSummary: [],
+      missingEvidence: [],
+      evidenceStrategy: []
+    }),
+  opposingArgumentsAndResponses: z
+    .array(
+      z.object({
+        possibleOpposingArgument: z.string().catch("对方可能对事实、责任或金额提出异议。"),
+        responseStrategy: z.string().catch("结合合同、履行记录和证据链进行回应。"),
+        neededEvidence: z.array(z.string()).catch([])
+      })
+    )
+    .catch([]),
+  riskWarnings: z.array(z.string()).catch([]),
+  recommendedNextSteps: z.array(z.string()).catch([])
+});
 
 export async function POST(request: Request) {
   try {
@@ -29,16 +71,16 @@ export async function POST(request: Request) {
     );
 
     try {
+      const baseline = createMockLitigationAnalysis(payload, sources);
       const aiResult = await generateJson({
-        systemPrompt: litigationAnalysisPrompt,
+        systemPrompt: litigationCompactPrompt,
         userPrompt: JSON.stringify({
           request: payload,
-          sourceContext: formatSourceContext(sources),
+          sourceContext: formatSourceContext(sources, { maxChars: 3600, maxResults: 4 }),
           requiredOutputShape: {
             caseSummary: "string",
             keyIssues: [{ issue: "string", explanation: "string", importance: "high | medium | low" }],
             claimsOrDefenseSuggestions: ["string"],
-            legalBasis: [{ title: "string", articleNumber: "string | optional", sourceName: "string", relevance: "string" }],
             evidenceAnalysis: {
               existingEvidenceSummary: ["string"],
               missingEvidence: [{ evidenceName: "string", purpose: "string", priority: "high | medium | low" }],
@@ -51,32 +93,26 @@ export async function POST(request: Request) {
                 neededEvidence: ["string"]
               }
             ],
-            draftDocuments: {
-              complaint: "string | optional",
-              answer: "string | optional",
-              representationStatement: "string | optional"
-            },
             riskWarnings: ["string"],
-            recommendedNextSteps: ["string"],
-            disclaimer: "string"
+            recommendedNextSteps: ["string"]
           }
         }),
-        schema: LitigationAnalysisAIResultSchema
+        schema: CompactLitigationAIResultSchema
       });
       const result = LitigationAnalysisResultSchema.parse({
+        ...baseline,
         ...aiResult,
-        legalBasis: aiResult.legalBasis.length
-          ? aiResult.legalBasis
-          : sources.slice(0, 4).map((source) => ({
-              title: source.title,
-              articleNumber: source.articleNumber,
-              sourceName: source.sourceName,
-              relevance: "该规则摘要可作为本案初步分析的参考依据，需核验正式法律文本。"
-            })),
+        legalBasis: sources.slice(0, 4).map((source) => ({
+          title: source.title,
+          articleNumber: source.articleNumber,
+          sourceName: source.sourceName,
+          relevance: "该规则摘要可作为本案初步分析的参考依据，需核验正式法律文本。"
+        })),
         role: payload.role,
         caseType: payload.caseType,
         jurisdiction: "中国大陆",
-        isMockFallback: false
+        isMockFallback: false,
+        fallbackReason: undefined
       });
       const { databaseWarning } = await saveLitigationAnalysisResult({
         request: payload,
@@ -122,6 +158,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "案件分析失败，请稍后重试。" }, { status: 500 });
   }
 }
+
+const litigationCompactPrompt = `
+你是一名中国大陆法域下的民商事诉讼辅助 AI。
+仅支持中华人民共和国大陆民商事案件，不处理刑事辩护、行政诉讼、港澳台或境外法律。
+只能基于用户提交材料和 source context 分析，不得编造法律条文、案例、案号、裁判规则、事实或证据。
+本次只生成核心诉讼分析，不生成起诉状、答辩状或代理词全文。
+如果证据不足，必须列入 missingEvidence。
+不得承诺胜诉，不得给出确定胜率。
+输出必须是合法 JSON，不输出 Markdown，不输出 JSON 以外的解释。
+JSON 只能包含 requiredOutputShape 中列明的字段。
+`;
 
 function withFallbackReason(
   result: LitigationAnalysisResult,
