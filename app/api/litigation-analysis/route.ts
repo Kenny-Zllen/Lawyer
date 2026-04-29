@@ -65,6 +65,14 @@ export async function POST(request: Request) {
       });
       const result = LitigationAnalysisResultSchema.parse({
         ...aiResult,
+        legalBasis: aiResult.legalBasis.length
+          ? aiResult.legalBasis
+          : sources.slice(0, 4).map((source) => ({
+              title: source.title,
+              articleNumber: source.articleNumber,
+              sourceName: source.sourceName,
+              relevance: "该规则摘要可作为本案初步分析的参考依据，需核验正式法律文本。"
+            })),
         role: payload.role,
         caseType: payload.caseType,
         jurisdiction: "中国大陆",

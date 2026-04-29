@@ -14,6 +14,21 @@ export const LitigationCaseTypeSchema = z.enum([
   "其他民商事纠纷"
 ]);
 export const ImportanceSchema = z.enum(["high", "medium", "low"]);
+const FlexibleImportanceSchema = z
+  .preprocess((value) => {
+    if (value === "高" || value === "high") return "high";
+    if (value === "中" || value === "medium") return "medium";
+    if (value === "低" || value === "low") return "low";
+    return value;
+  }, ImportanceSchema)
+  .catch("medium");
+const OptionalStringSchema = z.preprocess(
+  (value) => (value === null ? undefined : value),
+  z.string().optional()
+);
+const StringArraySchema = z
+  .preprocess((value) => (typeof value === "string" ? [value] : value), z.array(z.string()))
+  .catch([]);
 
 export const AuthoritativeLegalSourceSchema = z.object({
   id: z.string(),
@@ -172,11 +187,66 @@ export const LitigationAnalysisResultSchema = z.object({
   databaseWarning: z.string().optional()
 });
 
-export const LitigationAnalysisAIResultSchema = LitigationAnalysisResultSchema.omit({
-  role: true,
-  caseType: true,
-  jurisdiction: true,
-  isMockFallback: true,
-  fallbackReason: true,
-  databaseWarning: true
+export const LitigationAnalysisAIResultSchema = z.object({
+  caseSummary: z.string().catch("已根据用户提交材料生成初步案情摘要，需由律师结合完整证据核验。"),
+  keyIssues: z
+    .array(
+      z.object({
+        issue: z.string().catch("争议焦点"),
+        explanation: z.string().catch("需结合用户事实和权威来源进一步核验。"),
+        importance: FlexibleImportanceSchema
+      })
+    )
+    .catch([]),
+  claimsOrDefenseSuggestions: StringArraySchema,
+  legalBasis: z
+    .array(
+      z.object({
+        title: z.string().catch("法律依据"),
+        articleNumber: OptionalStringSchema,
+        sourceName: z.string().catch("内置规则摘要库"),
+        relevance: z.string().catch("需结合具体事实核验。")
+      })
+    )
+    .catch([]),
+  evidenceAnalysis: z
+    .object({
+      existingEvidenceSummary: StringArraySchema,
+      missingEvidence: z
+        .array(
+          z.object({
+            evidenceName: z.string().catch("补充证据"),
+            purpose: z.string().catch("用于补强相关事实的证明链条。"),
+            priority: FlexibleImportanceSchema
+          })
+        )
+        .catch([]),
+      evidenceStrategy: StringArraySchema
+    })
+    .catch({
+      existingEvidenceSummary: [],
+      missingEvidence: [],
+      evidenceStrategy: []
+    }),
+  opposingArgumentsAndResponses: z
+    .array(
+      z.object({
+        possibleOpposingArgument: z.string().catch("对方可能对事实、责任或金额提出异议。"),
+        responseStrategy: z.string().catch("结合合同、履行记录和证据链进行回应。"),
+        neededEvidence: StringArraySchema
+      })
+    )
+    .catch([]),
+  draftDocuments: z
+    .object({
+      complaint: OptionalStringSchema,
+      answer: OptionalStringSchema,
+      representationStatement: OptionalStringSchema
+    })
+    .catch({}),
+  riskWarnings: StringArraySchema,
+  recommendedNextSteps: StringArraySchema,
+  disclaimer: z
+    .string()
+    .catch("本工具仅提供 AI 生成的法律信息、诉讼分析和文书草稿支持，不构成正式法律意见。请在依赖任何输出前咨询合资格律师。")
 });
